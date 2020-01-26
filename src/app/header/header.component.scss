@@ -1,0 +1,21 @@
+mat-toolbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+
+  .title {
+    font-size: xx-large;
+  }
+
+  .menu {
+    position: absolute;
+    top: 50%;
+    right: 1%;
+    transform: translate(0, -50%);
+
+    #search-box {
+      border-radius: 20px;
+      padding: 2px 2px;
+    }
+  }
+}
