@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
+import { Component, } from '@angular/core';
 
 @Component({
   selector: 'app-root',
