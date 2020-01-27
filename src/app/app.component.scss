@@ -1,14 +1,10 @@
-.source {
-  height: 100%;
-  width: 100%;
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 2%;
-  right: 2%;
+.position {
+  position: absolute;
+  right: 6%;
+  bottom: 12%;
 
   button {
-    position: absolute;
-    bottom: 2%;
-    right: 2%;
+    position: -webkit-sticky;
+    position: fixed;
   }
 }

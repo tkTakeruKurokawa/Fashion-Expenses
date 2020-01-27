@@ -11,7 +11,7 @@ export class DataService {
 
   constructor() { }
 
-  get_data(): Observable<Data[]> {
+  get_data_list(): Observable<Data[]> {
     return of(DATA);
   }
 }
