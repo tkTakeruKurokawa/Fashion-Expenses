@@ -1,0 +1,30 @@
+mat-form-field {
+  //   top: 10px;
+  display: block;
+  width: 100%;
+  margin-left: 10px;
+  // border-radius: 10px;
+}
+
+.search_result {
+  position: fixed;
+  top: 7%;
+  right: 0%;
+  width: 15%;
+  background-color: white;
+
+  a {
+    display: block;
+    word-break: break-all;
+    white-space: normal;
+
+    font-size: medium;
+    font-weight: bolder;
+    color: #00e676;
+    border-left: #00e676 solid 6px; /*左側の線*/
+    border-bottom: #dadada solid 1px;
+    margin-bottom: 3px; /*下のバーとの余白*/
+    line-height: 1.5;
+    padding: 0.3em;
+  }
+}

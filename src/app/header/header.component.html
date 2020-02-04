@@ -1,21 +1,27 @@
 <mat-toolbar color="accent">
     <mat-toolbar-row>
         <span>
-            <a mat-button routerLink="top" class="header-button title">Fashion Expenses</a>
+            <a mat-button routerLink="top/" class="title">Fashion Expenses</a>
         </span>
         <div class="menu">
-            <span>
-                <a mat-button routerLink="brands" class="header-button">ブランド</a>
-            </span>
-            <span>
-                <a mat-button routerLink="items" class="header-button">アイテム</a>
-            </span>
-            <span>
-                <a mat-button routerLink="data-list" class="header-button">登録データ</a>
-            </span>
-            <span>
-                <input #search_box id="search-box" (input)="search()" placeholder="search" />
-            </span>
+            <!-- <mat-chip-list aria-label="Fish selection">
+                <mat-chip color="accent" selected routerLink="brands/" ">ブランド</mat-chip>
+                <mat-chip color=" accent" selected routerLink="items/">アイテム</mat-chip>
+                <mat-chip color="accent" selected routerLink="data-list/">登録データ</mat-chip>
+            </mat-chip-list> -->
+            <div>
+                <a mat-button routerLink="brands" [class.brand]="brand_showed">ブランド</a>
+            </div>
+            <div>
+                <a mat-button routerLink="items" [class.item]="item_showed">アイテム</a>
+            </div>
+            <div>
+                <a mat-button routerLink="data-list" [class.data]="data_showed">登録データ</a>
+            </div>
+            <div>
+                <app-search>
+                </app-search>
+            </div>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>

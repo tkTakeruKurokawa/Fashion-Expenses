@@ -1,0 +1,8 @@
+<mat-form-field>
+    <input matInput type="search" #search_box id="search-box" (input)="search(search_box.value)" placeholder="search" />
+</mat-form-field>
+<div class="search_result">
+    <div *ngFor="let data of data_list$ | async">
+        <a *ngIf="show" routerLink="/brands/{{data}}" class="data">{{data}}</a>
+    </div>
+</div>

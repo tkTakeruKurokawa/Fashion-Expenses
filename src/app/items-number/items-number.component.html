@@ -1,0 +1,56 @@
+<div id="items-number" class="title_width">
+    <h1 class="title">アイテムカテゴリごとの所持数</h1>
+
+    <div class="main">
+
+        <div class="chart">
+            <canvas baseChart [datasets]="bar_data" [labels]="bar_item_name" [options]="options" [legend]="legend"
+                [chartType]="type">
+            </canvas>
+        </div>
+
+        <div class="list">
+            <div class="total">
+                合計（両コラボアイテム含み）： {{total_number | number}}個
+            </div>
+            <div *ngFor="let name of item_name; let i = index">
+                <div *ngIf="i<display_number" class="item item_{{i+1}}">
+                    <div class="rank rank_{{i+1}}">
+                        {{i+1}}位
+                    </div>
+                    <a routerLink="/items/{{i+1}}" class="name name_{{i+1}}">
+                        {{name}}
+                    </a>
+                    <div class="number number_{{i+1}}">
+                        {{item_number[i] | number}}個
+                    </div>
+                </div>
+            </div>
+
+            <mat-expansion-panel *ngIf="show_others" (opened)="panel_state = true" (closed)="panel_state = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ panel_state ? '閉じる' : '続きを開く'  }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngFor="let name of item_name; let i = index">
+                    <div *ngIf="i >= display_number" class="item">
+                        <div class="rank">
+                            {{i+1}}位
+                        </div>
+                        <a routerLink="/items/{{i+1}}" class="name">
+                            {{name}}
+                        </a>
+                        <div class="number">
+                            {{item_number[i] | number}}個
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+
+            <a *ngIf="!show_others" mat-raised-button color="accent" [routerLink]="['/items']" fragment="items-number"
+                class="show_items">詳細を見る</a>
+
+        </div>
+    </div>
+</div>
