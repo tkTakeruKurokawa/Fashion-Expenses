@@ -1,20 +1,29 @@
 mat-toolbar {
   position: fixed;
+  z-index: 10;
   top: 0;
 
   .title {
+    display: block;
     font-size: xx-large;
   }
 
   .menu {
-    position: absolute;
-    top: 50%;
-    right: 1%;
-    transform: translate(0, -50%);
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
 
-    #search-box {
-      border-radius: 20px;
-      padding: 2px 2px;
+    .brand {
+      background-color: whitesmoke;
+    }
+    .item {
+      background-color: whitesmoke;
+    }
+    .data {
+      background-color: whitesmoke;
     }
   }
 }

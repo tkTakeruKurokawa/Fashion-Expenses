@@ -7,6 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from "@angular/material/icon";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatCardModule } from "@angular/material/card";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 import { HeaderComponent } from './header/header.component';
 import { TopComponent } from './top/top.component';
 import { BrandsComponent } from './brands/brands.component';
@@ -15,6 +21,13 @@ import { DataListComponent } from './data-list/data-list.component';
 import { RegisterComponent } from './register/register.component';
 import { BrandDetailComponent } from './brand-detail/brand-detail.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { ChartsModule } from "ng2-charts";
+import { BrandsValueComponent } from './brands-value/brands-value.component';
+import { BrandsNumberComponent } from './brands-number/brands-number.component';
+import { ItemsValueComponent } from './items-value/items-value.component';
+import { ItemsNumberComponent } from './items-number/items-number.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +40,11 @@ import { ItemDetailComponent } from './item-detail/item-detail.component';
     RegisterComponent,
     BrandDetailComponent,
     ItemDetailComponent,
+    BrandsValueComponent,
+    BrandsNumberComponent,
+    ItemsValueComponent,
+    ItemsNumberComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +53,14 @@ import { ItemDetailComponent } from './item-detail/item-detail.component';
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatGridListModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FlexLayoutModule,
+    ChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

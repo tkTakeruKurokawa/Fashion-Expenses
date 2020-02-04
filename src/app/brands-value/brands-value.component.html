@@ -1,0 +1,55 @@
+<div id="brands-value" class="title_width">
+    <h1 class="title">ブランドごとの消費額</h1>
+
+    <div class="main">
+
+        <div class="chart">
+            <canvas baseChart [datasets]="bar_data" [labels]="bar_brand_name" [options]="options" [legend]="legend"
+                [chartType]="type">
+            </canvas>
+        </div>
+
+        <div class="list">
+            <div class="total">
+                合計（両コラボアイテム含み）： {{total_value | currency:'JPY'}}
+            </div>
+            <div *ngFor="let name of brand_name; let i = index">
+                <div *ngIf="i<display_number" class="brand brand_{{i+1}}">
+                    <div class="rank rank_{{i+1}}">
+                        {{i+1}}位
+                    </div>
+                    <a routerLink="/brands/{{i+1}}" class="name name_{{i+1}}">
+                        {{name}}
+                    </a>
+                    <div class="value value_{{i+1}}">
+                        {{brand_value[i] | currency:'JPY'}}
+                    </div>
+                </div>
+            </div>
+
+            <mat-expansion-panel *ngIf="show_others" (opened)="panel_state = true" (closed)="panel_state = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ panel_state ? '閉じる' : '続きを開く'  }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngFor="let name of brand_name; let i = index">
+                    <div *ngIf="i >= display_number" class="brand">
+                        <div class="rank">
+                            {{i+1}}位
+                        </div>
+                        <a routerLink="/brands/{{i+1}}" class="name">
+                            {{name}}
+                        </a>
+                        <div class="value">
+                            {{brand_value[i] | currency:'JPY'}}
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+
+            <a *ngIf="!show_others" mat-raised-button color="accent" routerLink="/brands/" class="show_brands">詳細を見る</a>
+
+        </div>
+    </div>
+</div>

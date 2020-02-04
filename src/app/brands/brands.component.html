@@ -1,20 +1,4 @@
-<!-- <div *ngFor="let data of data_list">
-    <div class="main">
-        <div class="id">
-            ID: {{ data.id }}
-        </div>
-        <div class="brand">
-            ブランド名: {{ data.brand }}
-        </div>
-        <div class="item">
-            アイテム名: {{ data.item }}
-        </div>
-        <div class="item_category">
-            アイテムカテゴリ: {{ data.item_category }}
-        </div>
-        <div class="value">
-            価格: {{ data.value }}
-        </div>
-        <img [src]="data.image" />
-    </div>
-</div> -->
+<app-brands-value [data_list]="data_list" [display_number]="display_number" [show_others]="show_others">
+</app-brands-value>
+<app-brands-number [data_list]="data_list" [display_number]="display_number" [show_others]="show_others">
+</app-brands-number>
