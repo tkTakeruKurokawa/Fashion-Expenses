@@ -28,6 +28,8 @@ import { BrandsNumberComponent } from './brands-number/brands-number.component';
 import { ItemsValueComponent } from './items-value/items-value.component';
 import { ItemsNumberComponent } from './items-number/items-number.component';
 import { SearchComponent } from './search/search.component';
+import { DrawGraphComponent } from './draw-graph/draw-graph.component';
+import { EscapePipe } from './escape.pipe';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { SearchComponent } from './search/search.component';
     ItemsValueComponent,
     ItemsNumberComponent,
     SearchComponent,
+    DrawGraphComponent,
+    EscapePipe,
   ],
   imports: [
     BrowserModule,

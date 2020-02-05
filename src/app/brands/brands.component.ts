@@ -10,7 +10,11 @@ import { DataService } from '../data.service';
 export class BrandsComponent implements OnInit {
   @Input() display_number: number = 5;
   @Input() show_others: boolean = true;
-  data_list: Data[];
+
+  cloth_data: Data[];
+  titles: string[] = ["ブランドごとの消費額", "ブランドごとの所持数"];
+  category: string = "brands";
+  contents: string[] = ["value", "item_category"];
 
   constructor(private data_service: DataService) { }
 
@@ -19,8 +23,8 @@ export class BrandsComponent implements OnInit {
   }
 
   get_data_list() {
-    this.data_service.get_data_list().subscribe(data_list => {
-      this.data_list = data_list;
+    this.data_service.get_data_list().subscribe(cloth_data => {
+      this.cloth_data = cloth_data;
     });
   }
 }
