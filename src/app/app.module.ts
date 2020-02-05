@@ -23,10 +23,6 @@ import { BrandDetailComponent } from './brand-detail/brand-detail.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ChartsModule } from "ng2-charts";
-import { BrandsValueComponent } from './brands-value/brands-value.component';
-import { BrandsNumberComponent } from './brands-number/brands-number.component';
-import { ItemsValueComponent } from './items-value/items-value.component';
-import { ItemsNumberComponent } from './items-number/items-number.component';
 import { SearchComponent } from './search/search.component';
 import { DrawGraphComponent } from './draw-graph/draw-graph.component';
 import { EscapePipe } from './escape.pipe';
@@ -42,10 +38,6 @@ import { EscapePipe } from './escape.pipe';
     RegisterComponent,
     BrandDetailComponent,
     ItemDetailComponent,
-    BrandsValueComponent,
-    BrandsNumberComponent,
-    ItemsValueComponent,
-    ItemsNumberComponent,
     SearchComponent,
     DrawGraphComponent,
     EscapePipe,
