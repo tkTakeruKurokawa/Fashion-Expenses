@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        if (!event.url.includes("#")) {
+        if (event.url.includes("value")) {
           window.scrollTo(0, 0);
         }
       }

@@ -45,7 +45,7 @@ export class BrandsNumberComponent implements OnInit {
     this.data_list.forEach(data => {
       if (this.brand_name.includes(data.brand)) {
         let index = this.brand_name.findIndex(name => name === data.brand);
-        this.brand_number[index] = this.brand_number[index] + 1;
+        this.brand_number[index]++;
       } else {
         this.brand_name.push(data.brand);
         this.brand_number.push(1);

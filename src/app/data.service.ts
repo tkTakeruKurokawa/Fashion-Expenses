@@ -20,6 +20,7 @@ export class DataService {
       return of([]);
     }
     let result: any[] = [];
+
     DATA.forEach(value => {
       Object.keys(value).forEach(key => {
         if (key === "brand" || key === "item_category") {

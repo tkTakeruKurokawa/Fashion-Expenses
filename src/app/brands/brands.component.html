@@ -1,4 +1,5 @@
-<app-brands-value [data_list]="data_list" [display_number]="display_number" [show_others]="show_others">
-</app-brands-value>
-<app-brands-number [data_list]="data_list" [display_number]="display_number" [show_others]="show_others">
-</app-brands-number>
+<div class="brands" *ngFor="let title of titles; let i = index">
+    <app-draw-graph [cloth_data]="cloth_data" [title]="title" [category]="category" [content]="contents[i]"
+        [display_number]="display_number" [show_others]="show_others">
+    </app-draw-graph>
+</div>
