@@ -11,38 +11,36 @@ export class DataService {
 
   constructor() { }
 
-  get_data_list(): Observable<Data[]> {
+  get_cloth_data(): Observable<Data[]> {
     return of(DATA);
   }
 
-  search_data(term: string): Observable<Data[]> {
+  search_data(term: string): Observable<Map<string, string>> {
     if (!term.trim()) {
-      return of([]);
+      return of();
     }
-    let result: any[] = [];
+    let result = new Map<string, string>();
 
     DATA.forEach(value => {
       Object.keys(value).forEach(key => {
-        if (key === "brand" || key === "item_category") {
+        if (key === "brand" || key === "item") {
           let target: string = value[key];
           if (this.check_ja(term)) {
             if (this.to_kana(target).includes(this.to_kana(term))) {
-              if (!result.includes(target)) {
-                result.push(target);
+              if (!result.has(target)) {
+                result.set(target, key);
               }
             }
           } else {
             if (target.toUpperCase().includes(term.toUpperCase())) {
-              if (!result.includes(target)) {
-                result.push(target);
+              if (!result.has(target)) {
+                result.set(target, key);
               }
             }
           }
         }
       });
     });
-
-    result.sort();
 
     return of(result);
   }

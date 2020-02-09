@@ -23,7 +23,7 @@ export class ItemsComponent implements OnInit {
   }
 
   get_data_list() {
-    this.data_service.get_data_list().subscribe(cloth_data => {
+    this.data_service.get_cloth_data().subscribe(cloth_data => {
       this.cloth_data = cloth_data;
     });
   }

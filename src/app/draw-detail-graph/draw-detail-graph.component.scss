@@ -1,0 +1,77 @@
+.body {
+  width: 100%;
+  background-color: white;
+  text-align: center;
+
+  .title {
+    padding: 20px 0;
+  }
+  .chart {
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+
+    .chart-value {
+      height: 100%;
+      width: 50%;
+
+      .total-value {
+        color: red;
+      }
+    }
+    .chart-number {
+      height: 100%;
+      width: 50%;
+
+      .total-number {
+        color: red;
+      }
+    }
+  }
+
+  .data {
+    height: 100%;
+    width: 100%;
+
+    .cards {
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      width: 100%;
+      text-align: center;
+      overflow-wrap: break-word;
+
+      .card {
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 20%;
+        margin: 10px 5px;
+
+        mat-card-header {
+          display: inline;
+
+          mat-card-title {
+            font-weight: bold;
+          }
+        }
+        .action {
+          display: -webkit-flex;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          width: 100%;
+          text-align: center;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+}

@@ -1,53 +1,21 @@
-<div fxLayout="row wrap" fxLayoutAlign="center center">
-    <div fxFlex="25" fxFlex.sm="33.3" fxFlex.xs="50" *ngFor="let data of data_list">
-        <mat-grid-list cols="1" rowHeight="1:1">
-            <mat-grid-tile>
-                <mat-card>
-                    <img mat-card-image src="{{data.image}}" alt="{{data.item}}'s latest card img.'">
-                </mat-card>
-                <mat-grid-tile-footer style="margin-bottom:48px;">
-                    <div class="name">{{data.brand}}</div>
-                </mat-grid-tile-footer>
-                <mat-grid-tile-footer>
-                    <div class="kana">{{data.item}}</div>
-                </mat-grid-tile-footer>
-            </mat-grid-tile>
-            <!-- <mat-card>
-                <mat-card-title>
-                    {{data.item}}
-                </mat-card-title>
-                <mat-card-title>
-                    {{data.brand}}
-                </mat-card-title>
-                <mat-card-subtitle>
-                    {{data.item_category}}
-                </mat-card-subtitle>
-                <mat-card-subtitle>
-                    {{data.value}}
-                </mat-card-subtitle>
-                <img mat-card-md-image src="{{data.image}}" />
-            </mat-card> -->
-        </mat-grid-list>
-    </div>
+<div class="cards">
+    <mat-card *ngFor="let data of cloth_data" class="card">
+        <mat-card-header>
+            <mat-card-title>
+                <span>{{data.item_name}}</span>
+            </mat-card-title>
+            <mat-card-subtitle>
+                <span>{{data.brand}}</span>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image src="{{data.image}}" alt="{{data.item_name}}'s details">
+        <mat-card-content>
+            <p>{{data.item}}</p>
+            <p>{{data.value | currency:'JPY'}}</p>
+        </mat-card-content>
+        <mat-card-actions class="action">
+            <a mat-raised-button color="accent">編集</a>
+            <a mat-raised-button>削除</a>
+        </mat-card-actions>
+    </mat-card>
 </div>
-<!-- <div>
-        <div class="main">
-            <div class="id">
-                ID: {{ data.id }}
-            </div>
-            <div class=" brand">
-                    ブランド名: {{ data.brand }}
-    </div>
-    <div class="item">
-        アイテム名: {{ data.item }}
-    </div>
-    <div class="item_category">
-        アイテムカテゴリ: {{ data.item_category }}
-    </div>
-    <div class="value">
-        価格: {{ data.value }}
-    </div>
-    <img [src]="data.image" />
-</div>
-</div>
-</div> -->

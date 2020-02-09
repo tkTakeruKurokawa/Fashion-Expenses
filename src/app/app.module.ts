@@ -19,13 +19,12 @@ import { BrandsComponent } from './brands/brands.component';
 import { ItemsComponent } from './items/items.component';
 import { DataListComponent } from './data-list/data-list.component';
 import { RegisterComponent } from './register/register.component';
-import { BrandDetailComponent } from './brand-detail/brand-detail.component';
-import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { ChartsModule } from "ng2-charts";
 import { SearchComponent } from './search/search.component';
 import { DrawGraphComponent } from './draw-graph/draw-graph.component';
 import { EscapePipe } from './escape.pipe';
+import { DrawDetailGraphComponent } from './draw-detail-graph/draw-detail-graph.component';
 
 @NgModule({
   declarations: [
@@ -36,11 +35,10 @@ import { EscapePipe } from './escape.pipe';
     ItemsComponent,
     DataListComponent,
     RegisterComponent,
-    BrandDetailComponent,
-    ItemDetailComponent,
     SearchComponent,
     DrawGraphComponent,
     EscapePipe,
+    DrawDetailGraphComponent,
   ],
   imports: [
     BrowserModule,

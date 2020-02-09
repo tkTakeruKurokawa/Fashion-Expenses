@@ -72,7 +72,7 @@ export class DrawGraphComponent implements OnInit {
     if (this.category === "brands") {
       this.name_key = "brand";
     } else {
-      this.name_key = "item_category";
+      this.name_key = "item";
     }
 
     this.cloth_data.forEach(data => {

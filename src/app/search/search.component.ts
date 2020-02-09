@@ -11,7 +11,7 @@ import { DataService } from "../data.service";
 })
 export class SearchComponent implements OnInit {
   show: boolean = false;
-  data_list$: Observable<Data[]>;
+  data_list$: Observable<Map<string, string>>;
   private search_terms = new Subject<string>();
 
   @HostListener('document:click', ['$event'])
