@@ -8,18 +8,17 @@ import { DataService } from '../data.service';
   styleUrls: ['./data-list.component.scss']
 })
 export class DataListComponent implements OnInit {
-  data_list: Data[];
+  cloth_data: Data[];
 
   constructor(private data_service: DataService) { }
 
   ngOnInit() {
-    this.get_data_list();
+    this.get_cloth_list();
   }
 
-  get_data_list() {
-    this.data_service.get_data_list().subscribe(data_list => {
-      this.data_list = data_list
-      console.log(data_list);
+  get_cloth_list() {
+    this.data_service.get_cloth_data().subscribe(cloth_list => {
+      this.cloth_data = cloth_list
     });
   }
 

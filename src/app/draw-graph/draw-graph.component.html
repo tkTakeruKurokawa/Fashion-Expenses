@@ -1,9 +1,7 @@
 <div id="{{category}}-{{content}}" class="title_width">
-
     <h1 class="title">{{title}}</h1>
 
     <div class="main">
-
         <div class="chart">
             <canvas baseChart [datasets]="bar_data" [labels]="bar_names" [options]="bar_options" [legend]="bar_legend"
                 [chartType]="bar_type">
@@ -21,7 +19,7 @@
                     <div class="rank rank_{{i+1}}">
                         {{i+1}}位
                     </div>
-                    <a routerLink="/brands/{{name | escape}}" class="name name_{{i+1}}">
+                    <a [routerLink]="['/' + category, name | escape]" class="name name_{{i+1}}">
                         {{name}}
                     </a>
                     <div class="value value_{{i+1}}">
@@ -42,7 +40,7 @@
                         <div class="rank">
                             {{i+1}}位
                         </div>
-                        <a routerLink="/brands/{{name |escape}}" class="name">
+                        <a [routerLink]="['/' + category, name | escape]" class="name">
                             {{name}}
                         </a>
                         <div class="value">
@@ -53,9 +51,8 @@
                 </div>
             </mat-expansion-panel>
 
-            <a *ngIf="!show_others" mat-raised-button color="accent" [routerLink]="['/'+category]"
+            <a *ngIf="!show_others" mat-raised-button color="accent" [routerLink]="['/' + category]"
                 fragment="{{category}}-{{content}}" class="show_others">詳細を見る</a>
-
         </div>
     </div>
 </div>

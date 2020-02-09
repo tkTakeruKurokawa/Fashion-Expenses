@@ -10,13 +10,13 @@
                 <mat-chip color="accent" selected routerLink="data-list/">登録データ</mat-chip>
             </mat-chip-list> -->
             <div>
-                <a mat-button routerLink="brands" [class.brand]="brand_showed">ブランド</a>
+                <a mat-button routerLink="brands" routerLinkActive="brand">ブランド</a>
             </div>
             <div>
-                <a mat-button routerLink="items" [class.item]="item_showed">アイテム</a>
+                <a mat-button routerLink="items" routerLinkActive="item">アイテム</a>
             </div>
             <div>
-                <a mat-button routerLink="data-list" [class.data]="data_showed">登録データ</a>
+                <a mat-button routerLink="data-list" routerLinkActive="data">登録データ</a>
             </div>
             <div>
                 <app-search>

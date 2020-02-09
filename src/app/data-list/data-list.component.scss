@@ -1,0 +1,37 @@
+.cards {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  text-align: center;
+  overflow-wrap: break-word;
+
+  .card {
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 20%;
+    margin: 10px 5px;
+
+    mat-card-header {
+      display: inline;
+
+      mat-card-title {
+        font-weight: bold;
+      }
+    }
+    .action {
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+    }
+  }
+}

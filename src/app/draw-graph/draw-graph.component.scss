@@ -3,10 +3,9 @@ $color: #00e600;
 .title_width {
   width: 100%;
   background-color: white;
+  text-align: center;
 
   .title {
-    font-size: xx-large;
-    text-align: center;
     padding: 20px 0;
   }
 }
@@ -79,7 +78,7 @@ $color: #00e600;
         margin: 0 5px;
         color: $color;
         font-size: larger;
-        word-break: break-all;
+        overflow-wrap: break-word;
 
         &_1 {
           font-weight: 900;
