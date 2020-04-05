@@ -39,4 +39,9 @@ export const DATA: Data[] = [
     { id: 35, brand: "ISSEYMIYAKE", item_name: "藍染シャツ", item: "シャツ", value: 22000, image: "assets/broken_image.png" },
     { id: 36, brand: "NIKE", item_name: "ナイトトラック", item: "シューズ", value: 20000, image: "assets/broken_image.png" },
     { id: 37, brand: "NILOS", item_name: "オーバーサイズカットソー", item: "Tシャツ/カットソー", value: 16000, image: "assets/broken_image.png" },
+    { id: 38, brand: "BALENCIAGA", item_name: "ミリタリーコート", item: "アウター", value: 85600, image: "assets/broken_image.png" },
+    { id: 39, brand: "VALENTINO", item_name: "デニムパンツ", item: "パンツ", value: 41800, image: "assets/broken_image.png" },
+    { id: 40, brand: "3.1 Phillip Lim", item_name: "ハイブリッドニットコート", item: "アウター", value: 41800, image: "assets/broken_image.png" },
+    { id: 41, brand: "Sacai", item_name: "LDWaffle", item: "シューズ", value: 31500, image: "assets/broken_image.png" },
+    { id: 42, brand: "NIKE", item_name: "LDWaffle", item: "シューズ", value: 31500, image: "assets/broken_image.png" },
 ];

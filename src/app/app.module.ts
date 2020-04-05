@@ -25,6 +25,13 @@ import { SearchComponent } from './search/search.component';
 import { DrawGraphComponent } from './draw-graph/draw-graph.component';
 import { EscapePipe } from './escape.pipe';
 import { DrawDetailGraphComponent } from './draw-detail-graph/draw-detail-graph.component';
+import { AngularFireModule } from "@angular/fire";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { environment } from "../environments/environment";
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -39,6 +46,8 @@ import { DrawDetailGraphComponent } from './draw-detail-graph/draw-detail-graph.
     DrawGraphComponent,
     EscapePipe,
     DrawDetailGraphComponent,
+    SignUpComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,6 +64,10 @@ import { DrawDetailGraphComponent } from './draw-detail-graph/draw-detail-graph.
     MatInputModule,
     FlexLayoutModule,
     ChartsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

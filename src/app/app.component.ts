@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HeaderComponent } from './header/header.component';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { Data } from "./data";
 
 @Component({
   selector: 'app-root',
@@ -8,8 +8,11 @@ import { NavigationEnd, Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  data: Data;
 
-  constructor(protected router: Router) { }
+  constructor(
+    protected router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -19,5 +22,9 @@ export class AppComponent implements OnInit {
         }
       }
     });
+
+
+    // this.db.collection("users").doc("Ml3PWz4WPhIlsvdUIiNH").collection("clothes").doc<Data>("lVzaafqGcVxgI1JQDw89").valueChanges().subscribe(data => console.log(data));
+    // this.db.doc<Data>("users/Ml3PWz4WPhIlsvdUIiNH/clothes/lVzaafqGcVxgI1JQDw89").valueChanges().subscribe(data => console.log(data));
   }
 }
