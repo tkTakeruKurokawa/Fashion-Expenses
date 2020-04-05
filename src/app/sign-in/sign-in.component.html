@@ -1,0 +1,13 @@
+<div class="sign_in">
+    <h1>ログイン</h1>
+
+    <form class="form" [formGroup]="sign_in_form" (ngSubmit)="sign_in()">
+        <label for="email">メールアドレス</label>
+        <input type="email" id="email" class="input" formControlName="email" placeholder="example@example.com" required>
+        <label for="password">パスワード</label>
+        <input type="password" id="password" class="input" formControlName="password" required>
+        <button mat-raised-button color="accent" type="submit" class="button">ログイン</button>
+    </form>
+
+    <a routerLink="/sign-up">アカウント登録はこちら</a>
+</div>

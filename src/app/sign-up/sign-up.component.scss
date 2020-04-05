@@ -1,0 +1,37 @@
+.sign_up {
+  height: 100%;
+  width: 50%;
+  margin: 0 auto;
+  padding: 20px 0;
+  background-color: white;
+  border-radius: 5px;
+  text-align: center;
+
+  h1 {
+    text-align: center;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: left;
+    width: 80%;
+    //   height: 100px;
+    margin: 0 auto;
+
+    .input {
+      height: 30px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+    .button {
+      width: 30%;
+      margin: 20px auto;
+    }
+  }
+}
