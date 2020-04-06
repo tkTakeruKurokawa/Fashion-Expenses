@@ -1,10 +1,13 @@
-<app-header></app-header>
+<div *ngIf="login">
+    <app-header></app-header>
+</div>
+
 <div class="main">
     <router-outlet></router-outlet>
 </div>
-<div class="position">
+
+<div *ngIf="login" class="position">
     <button mat-fab color="accent">
         <mat-icon>add</mat-icon>
     </button>
 </div>
-<!-- {{(data | async)?.brand}} -->
