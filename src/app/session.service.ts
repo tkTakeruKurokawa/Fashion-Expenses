@@ -4,20 +4,37 @@ import { Router } from "@angular/router";
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import * as firebase from 'firebase/app';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+
+export class Session {
+  login: boolean;
+  uid: string;
+
+  constructor() {
+    this.login = false;
+    this.uid = "";
+  }
+
+  reset(): Session {
+    this.login = false;
+    this.uid = "";
+    return this;
+  }
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-  public login: boolean = false;
-  public uid: string = "";
+  public session = new Session();
+  public session_subject = new Subject<Session>();
+  public session_state = this.session_subject.asObservable();
 
   constructor(
     private router: Router,
     private auth: AngularFireAuth,
-    private store: AngularFirestore
+    private store: AngularFirestore,
   ) { }
 
 
@@ -58,10 +75,12 @@ export class SessionService {
       //   }
       // })
       .then(auth => {
-        this.login = true;
-        this.uid = auth.user.uid;
-        console.log(this.store.collection('users').doc(this.uid).valueChanges());
-        return this.router.navigate(['/top']);
+        // this.uid = auth.user.uid;
+        // console.log(this.store.collection('users').doc(this.uid).valueChanges());
+        this.session.login = true;
+        this.session.uid = auth.user.uid;
+        this.session_subject.next(this.session);
+        return this.router.navigate(['/']);
       }
       )
       .then(() => alert('ログインしました'))
@@ -71,14 +90,39 @@ export class SessionService {
       })
   }
 
+  check_sign_in() {
+    this.auth
+      .authState
+      .subscribe(auth => {
+        this.session.login = (!!auth);
+        // this.session.uid = auth.uid;
+        this.session_subject.next(this.session);
+      });
+  }
+
+  check_sign_in_state(): Observable<Session> {
+    return this.auth
+      .authState
+      .pipe(
+        map(auth => {
+          this.session.login = (!!auth);
+          // this.session.uid = auth.uid;
+          return this.session;
+        })
+      )
+  }
+
+  check_login(): boolean {
+    return this.session.login
+  }
+
   sign_out() {
     this.auth
       .auth
       .signOut()
       .then(() => {
-        this.login = false;
-        this.uid = "";
-        return this.router.navigate(['/sign_in']);
+        this.session_subject.next(this.session.reset());
+        return this.router.navigate(['/sign-in']);
       })
       .then(() => alert('ログアウトしました'))
       .catch(err => {

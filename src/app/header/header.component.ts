@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionService } from '../session.service';
 
 
 @Component({
@@ -8,8 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(public session_service: SessionService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+  }
+
+  sign_out() {
+    this.session_service.sign_out();
   }
 }

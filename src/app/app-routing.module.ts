@@ -8,19 +8,20 @@ import { DataListComponent } from './data-list/data-list.component';
 import { DrawDetailGraphComponent } from './draw-detail-graph/draw-detail-graph.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { AuthGuard } from './guard/auth.guard';
+import { LoginGuard } from './guard/login.guard';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/top', pathMatch: 'full' },
-  { path: 'sign-up', component: SignUpComponent },
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'top', component: TopComponent },
-  { path: 'brands', component: BrandsComponent },
-  { path: 'brands/:name', component: DrawDetailGraphComponent },
-  { path: 'items', component: ItemsComponent },
-  { path: 'items/:category', component: DrawDetailGraphComponent },
-  { path: 'data-list', component: DataListComponent },
-  { path: '**', redirectTo: '/top' },
+  { path: 'sign-up', component: SignUpComponent, canActivate: [LoginGuard] },
+  { path: 'sign-in', component: SignInComponent, canActivate: [LoginGuard] },
+  { path: '', component: TopComponent, canActivate: [AuthGuard] },
+  { path: 'brands', component: BrandsComponent, canActivate: [AuthGuard] },
+  { path: 'brands/:name', component: DrawDetailGraphComponent, canActivate: [AuthGuard] },
+  { path: 'items', component: ItemsComponent, canActivate: [AuthGuard] },
+  { path: 'items/:category', component: DrawDetailGraphComponent, canActivate: [AuthGuard] },
+  { path: 'data-list', component: DataListComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '' },
 ];
 
 
