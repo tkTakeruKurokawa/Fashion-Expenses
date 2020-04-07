@@ -2,26 +2,11 @@ import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-import * as firebase from 'firebase/app';
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 
-export class Session {
-  login: boolean;
-  uid: string;
-
-  constructor() {
-    this.login = false;
-    this.uid = "";
-  }
-
-  reset(): Session {
-    this.login = false;
-    this.uid = "";
-    return this;
-  }
-}
+import { Session } from "../Session";
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +80,7 @@ export class SessionService {
       .authState
       .subscribe(auth => {
         this.session.login = (!!auth);
-        // this.session.uid = auth.uid;
+        this.session.uid = auth.uid;
         this.session_subject.next(this.session);
       });
   }

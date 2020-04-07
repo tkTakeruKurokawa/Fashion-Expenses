@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { Data } from "./data";
-import { DATA } from "./mock-data";
+import { Data } from "../data";
+import { DATA } from "../mock-data";
+import { Session } from "../Session";
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  constructor() { }
+  constructor(
+    private db: AngularFirestore,
+    private session: Session,
+  ) { }
 
   get_cloth_data(): Observable<Data[]> {
+    this.db.collection("users").doc(this.session.uid).collection("clothes").doc<Data>("lVzaafqGcVxgI1JQDw89").valueChanges().subscribe(data => console.log(data));
     return of(DATA);
   }
 
