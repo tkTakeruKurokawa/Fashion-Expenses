@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, HostListener } from '@angular/core';
 import { Observable, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { Data } from "../data";
-import { DataService } from "../data.service";
+import { DataService } from "../service/data.service";
 
 @Component({
   selector: 'app-search',

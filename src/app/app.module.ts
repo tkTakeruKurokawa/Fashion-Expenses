@@ -23,7 +23,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { ChartsModule } from "ng2-charts";
 import { SearchComponent } from './search/search.component';
 import { DrawGraphComponent } from './draw-graph/draw-graph.component';
-import { EscapePipe } from './escape.pipe';
+import { EscapePipe } from './pipe/escape.pipe';
 import { DrawDetailGraphComponent } from './draw-detail-graph/draw-detail-graph.component';
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";

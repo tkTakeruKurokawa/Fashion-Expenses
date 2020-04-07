@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Data } from '../data';
-import { DataService } from '../data.service';
+import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-items',

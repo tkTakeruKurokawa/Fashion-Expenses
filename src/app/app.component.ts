@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Data } from "./data";
-import { SessionService, Session } from './session.service';
+import { Session } from "./Session";
+import { SessionService } from './service/session.service';
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,6 @@ export class AppComponent {
         this.login = session.login;
       }
     });
-
-    console.log("aaaaa");
 
 
     this.router.events.subscribe((event) => {

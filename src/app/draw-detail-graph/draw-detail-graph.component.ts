@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Data } from '../data';
-import { DataService } from '../data.service';
+import { DataService } from '../service/data.service';
 import { ActivatedRoute } from '@angular/router';
 
 class Detail {
