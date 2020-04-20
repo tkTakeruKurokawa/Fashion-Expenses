@@ -1,24 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 import { Data } from "../data";
 import { DATA } from "../mock-data";
-import { Session } from "../Session";
 import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+  data: Data[];
+  cloth_subject = new Subject<Data[]>();
+  clothes = this.cloth_subject.asObservable();
 
   constructor(
-    private db: AngularFirestore,
-    private session: Session,
+    private store: AngularFirestore,
   ) { }
 
+
+  get_data_from_firestore(uid: string) {
+    // this.session_service.session_state.subscribe((session: Session) => {
+    // if (session.login) {
+    this.store
+      .collection("users")
+      .doc(uid)
+      .collection<Data>("clothes")
+      .valueChanges()
+      .subscribe((data: Data[]) => {
+        this.cloth_subject.next(data);
+      })
+  }
+
   get_cloth_data(): Observable<Data[]> {
-    this.db.collection("users").doc(this.session.uid).collection("clothes").doc<Data>("lVzaafqGcVxgI1JQDw89").valueChanges().subscribe(data => console.log(data));
-    return of(DATA);
+    return this.clothes
+    // return of(DATA);
   }
 
   search_data(term: string): Observable<Map<string, string>> {

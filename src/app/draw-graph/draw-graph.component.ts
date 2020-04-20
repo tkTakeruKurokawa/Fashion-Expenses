@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Data } from '../data';
+import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-draw-graph',
@@ -36,7 +37,7 @@ export class DrawGraphComponent implements OnInit {
   panel_state: boolean = false;
   name_key: string;
 
-  constructor() { }
+  constructor(private data_service: DataService) { }
 
   ngOnInit() {
     this.make_ranking();

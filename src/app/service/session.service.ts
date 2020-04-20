@@ -31,7 +31,7 @@ export class SessionService {
       //   return this.create_user(_auth.user.uid);
       //   return auth.user.sendEmailVerification();
       // })
-      // .then(() => {
+      // .then(auth => {
       //   return this.create_user(auth.user.uid);
       // })
       .then(() => {
@@ -79,9 +79,11 @@ export class SessionService {
     this.auth
       .authState
       .subscribe(auth => {
-        this.session.login = (!!auth);
-        this.session.uid = auth.uid;
-        this.session_subject.next(this.session);
+        if (!!auth) {
+          this.session.login = true;
+          this.session.uid = auth.uid;
+          this.session_subject.next(this.session);
+        }
       });
   }
 
@@ -95,10 +97,6 @@ export class SessionService {
           return this.session;
         })
       )
-  }
-
-  check_login(): boolean {
-    return this.session.login
   }
 
   sign_out() {
@@ -120,6 +118,6 @@ export class SessionService {
     return this.store
       .collection('users/')
       .doc(uid)
-      .set(Object.assign({}, uid));
+      .set({ "uid": uid });
   }
 }

@@ -47,7 +47,7 @@ $color: #00e600;
       justify-content: space-between;
       font-size: medium;
       font-weight: 600;
-      background-color: #22ff001e;
+      background-color: #fff8e198;
       box-shadow: 2px 2px 4px rgb(158, 158, 158);
       height: 100%;
       width: 100%;
@@ -63,15 +63,15 @@ $color: #00e600;
         // height: 100%;
         // width: 40px;
 
-        &_1 {
-          color: rgb(255, 217, 0);
-        }
-        &_2 {
-          color: rgb(221, 221, 221);
-        }
-        &_3 {
-          color: rgb(212, 137, 39);
-        }
+        // &_1 {
+        //   color: rgb(255, 217, 0);
+        // }
+        // &_2 {
+        //   color: rgb(221, 221, 221);
+        // }
+        // &_3 {
+        //   color: rgb(212, 137, 39);
+        // }
       }
       .name {
         display: block;
