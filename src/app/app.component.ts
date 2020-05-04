@@ -19,11 +19,13 @@ export class AppComponent {
     private data_service: DataService
   ) {
     this.session_service.check_sign_in();
-    this.session_service.session_state.subscribe((session: Session) => {
-      if (session) {
-        this.data_service.get_data_from_firestore(session.uid);
-      }
-    });
+    // this.session_service.session_state.subscribe((session: Session) => {
+    //   if (session.login) {
+    //     this.data_service.get_data_from_firestore(session.uid);
+    //   }
+    // });
+
+    this.data_service.get_data_from_firestore();
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

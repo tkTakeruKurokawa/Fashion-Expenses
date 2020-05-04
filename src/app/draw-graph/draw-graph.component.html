@@ -3,8 +3,8 @@
 
     <div class="main">
         <div class="chart">
-            <canvas baseChart [datasets]="bar_data" [labels]="bar_names" [options]="bar_options" [legend]="bar_legend"
-                [chartType]="bar_type">
+            <canvas baseChart [data]="bar_values" [labels]="bar_names" [colors]="bar_colors" [options]="bar_options"
+                [legend]="bar_legend" [chartType]="bar_type">
             </canvas>
         </div>
 

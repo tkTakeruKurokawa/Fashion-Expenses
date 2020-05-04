@@ -1,40 +1,83 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject, } from 'rxjs';
 
 import { Data } from "../data";
 import { DATA } from "../mock-data";
 import { AngularFirestore } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
+import { SessionService } from './session.service';
+import { Session } from '../Session';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   data: Data[];
-  cloth_subject = new Subject<Data[]>();
-  clothes = this.cloth_subject.asObservable();
+  cloth_subject = new BehaviorSubject<Data[]>(this.data);
+  // cloth_subject;
+  // clothes = this.cloth_subject.asObservable();
+  clothes: Observable<Data[]>;
 
   constructor(
+    private session_service: SessionService,
     private store: AngularFirestore,
   ) { }
 
 
-  get_data_from_firestore(uid: string) {
-    // this.session_service.session_state.subscribe((session: Session) => {
-    // if (session.login) {
-    this.store
-      .collection("users")
-      .doc(uid)
-      .collection<Data>("clothes")
-      .valueChanges()
-      .subscribe((data: Data[]) => {
-        this.cloth_subject.next(data);
-      })
+  get_data_from_firestore() {
+    this.session_service.session_state.subscribe((session: Session) => {
+      if (session.login) {
+        this.clothes = this.store
+          .collection("users")
+          .doc(session.uid)
+          .collection<Data>("clothes")
+          .valueChanges()
+          .pipe(
+            map(actions => {
+              return actions;
+            })
+          )
+        // .snapshotChanges()
+        // .pipe(
+        //   map(actions => actions.map(action => {
+        //     const data = action.payload.doc.data() as Data;
+        //     return data;
+        //   }))
+        // )
+
+        // .subscribe((data: Data[]) => {
+        //   console.log("get data from firestore");
+        //   this.data = data;
+        //   this.cloth_subject = new BehaviorSubject<Data[]>(data);
+        //   this.cloth_subject.next(data);
+        //   this.clothes = this.cloth_subject.asObservable()
+        // });
+      }
+    });
   }
 
   get_cloth_data(): Observable<Data[]> {
-    return this.clothes
+    // console.log(this.clothes);
+    // this.cloth_subject.next(this.data);
+    return this.clothes;
+    // return new Observable((observer => {
+    //   observer.next(this.data);
+    // }));
+    // return of(this.data);
     // return of(DATA);
   }
+
+  next_subject() {
+    this.cloth_subject.next(this.data);
+  }
+
+  // get_brand_data(): Observable<{name: string[]; value: number[]}> {
+  // return this.clothes.pipe(
+  //   map(data => {
+  //     data[brand]
+  //   })
+  // );
+  // }
 
   search_data(term: string): Observable<Map<string, string>> {
     if (!term.trim()) {

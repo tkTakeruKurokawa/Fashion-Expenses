@@ -1,28 +1,58 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, AfterContentInit, Input, NgZone, ChangeDetectorRef } from '@angular/core';
 import { Data } from '../data';
 import { DataService } from '../service/data.service';
+import { Observable } from 'rxjs';
+import { take, switchMap, skip, filter, tap } from 'rxjs/operators';
+import { SessionService } from '../service/session.service';
+import { Session } from '../Session';
 
 @Component({
   selector: 'app-draw-graph',
   templateUrl: './draw-graph.component.html',
   styleUrls: ['./draw-graph.component.scss']
 })
-export class DrawGraphComponent implements OnInit {
-  @Input() cloth_data: Data[];
+export class DrawGraphComponent implements OnInit, AfterContentInit {
+  @Input() cloth_data;
   @Input() title: string;
   @Input() category: string;
   @Input() content: string;
   @Input() display_number: number;
   @Input() show_others: boolean;
 
+  clothes: Data[] = [];
   names: string[] = [];
   values: number[] = [];
   total: number = 0;
 
   bar_names: string[] = [];
   bar_values: number[] = [];
-  bar_data: any[] = [
-    { data: this.bar_values },
+  bar_colors: Array<any> = [
+    // { backgroundColor: 'rgb(255, 99, 132)' },
+    // { backgroundColor: 'rgb(54, 162, 235)' },
+    // { backgroundColor: 'rgb(255, 206, 86)' },
+    // { backgroundColor: 'rgb(231, 233, 237)' },
+    // { backgroundColor: 'rgb(75, 192, 192)' },
+    // { backgroundColor: 'rgb(151, 187, 205)' },
+    // { backgroundColor: 'rgb(220, 220, 220)' },
+    // { backgroundColor: 'rgb(247, 70, 74)' },
+    // { backgroundColor: 'rgb(70, 191, 189)' },
+    // { backgroundColor: 'rgb(253, 180, 92)' },
+    // { backgroundColor: 'rgb(148, 159, 177)' },
+    {
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(231, 233, 237)',
+        'rgb(75, 192, 192)',
+        'rgb(151, 187, 205)',
+        'rgb(220, 220, 220)',
+        'rgb(247, 70, 74)',
+        'rgb(70, 191, 189)',
+        'rgb(253, 180, 92)',
+        'rgb(148, 159, 177)'
+      ]
+    },
   ];
   bar_options: any = {
     responsive: true,
@@ -37,12 +67,83 @@ export class DrawGraphComponent implements OnInit {
   panel_state: boolean = false;
   name_key: string;
 
-  constructor(private data_service: DataService) { }
+  flag: boolean = false;
+
+  constructor(
+    private data_service: DataService,
+    private session_service: SessionService,
+    private zone: NgZone,
+    private change_detector: ChangeDetectorRef,
+  ) { }
 
   ngOnInit() {
-    this.make_ranking();
-    this.sort_ranking();
-    this.display_filter();
+    // this.cloth_data
+    //   .pipe(
+    //     take(1)
+    //   )
+    //   .subscribe(data => {
+    //     console.log(data);
+    //     this.clothes = data
+    //     this.make_ranking();
+    //     this.sort_ranking();
+    //     this.display_filter();
+    //     console.log(this.bar_names);
+    //   });
+    // this.clothes = this.cloth_data;
+    // this.data_service.get_cloth_data().subscribe(data => this.clothes = data);
+
+    this.data_service.get_cloth_data()
+      .subscribe(data => {
+        this.clothes = data;
+        this.make_ranking();
+        this.sort_ranking();
+        this.display_filter();
+      });
+
+    // if (typeof this.data_service.get_cloth_data() === 'undefined') {
+    //   setTimeout(() => {
+    //     this.data_service.get_cloth_data()
+    //       .subscribe(data => {
+    //         this.clothes = data;
+    //         this.make_ranking();
+    //         this.sort_ranking();
+    //         this.display_filter();
+    //         // this.flag = true;
+    //         // this.change_detector.detectChanges();
+    //         // this.data_service.next_subject();
+    //         console.log(this.clothes);
+    //       })
+    //   }, 500);
+    // } else {
+    //   this.data_service.get_cloth_data()
+    //     .subscribe(data => {
+    //       this.clothes = data;
+    //       this.make_ranking();
+    //       this.sort_ranking();
+    //       this.display_filter();
+    //       // this.flag = true;
+    //       // this.change_detector.detectChanges();
+    //       // this.data_service.next_subject();
+    //       console.log(this.clothes);
+    //     })
+    // }
+
+
+
+    // this.zone.run(() => {
+    //   this.make_ranking();
+    //   this.sort_ranking();
+    //   this.display_filter();
+    // });
+
+
+  }
+
+  ngAfterContentInit() {
+    // this.make_ranking();
+    // this.sort_ranking();
+    // this.display_filter();
+    // this.change_detector.detectChanges();
   }
 
   increment_total(data: number, index?: number) {
@@ -76,7 +177,7 @@ export class DrawGraphComponent implements OnInit {
       this.name_key = "item";
     }
 
-    this.cloth_data.forEach(data => {
+    this.clothes.forEach(data => {
       if (this.names.includes(data[this.name_key])) {
         let index = this.names.findIndex(name => name === data[this.name_key]);
         this.increment_total(data[this.content], index);
