@@ -7,10 +7,10 @@ class Detail {
   title: string;
   cloth_data: Data[];
   total: number[] = [0, 0];
-  panel_state: boolean = false;
 
   params: string[] = [];
   category: string;
+  is_exist: boolean = false;
 
   bar_value: number[] = [];
   bar_value_name: string[] = [];
@@ -21,6 +21,23 @@ class Detail {
   ];
   bar_number_data: any[] = [
     { data: this.bar_number },
+  ];
+  bar_colors: Array<any> = [
+    {
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(231, 233, 237)',
+        'rgb(75, 192, 192)',
+        'rgb(151, 187, 205)',
+        'rgb(220, 220, 220)',
+        'rgb(247, 70, 74)',
+        'rgb(70, 191, 189)',
+        'rgb(253, 180, 92)',
+        'rgb(148, 159, 177)'
+      ]
+    },
   ];
   bar_options: any = {
     responsive: true,
@@ -65,8 +82,6 @@ export class DrawDetailGraphComponent implements OnInit {
 
       this.define_category();
       this.get_data_list();
-      this.make_ranking();
-      this.sort_ranking();
     }));
     // this.detail.active_router.paramMap.subscribe(param => console.log(param));
     // console.log(this.detail.active_router);
@@ -90,22 +105,17 @@ export class DrawDetailGraphComponent implements OnInit {
 
     this.data_service.get_cloth_data().subscribe(cloth_data => {
       this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.detail.params[1]);
+
+      if (this.detail.cloth_data.length > 0) {
+        this.detail.is_exist = true;
+      }
+
       this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
+      this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
+
+      this.make_ranking();
+      this.sort_ranking();
     });
-
-    this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
-  }
-
-  add_bar_data(data: Data) {
-    this.detail.bar_value_name.push(data[this.detail.category]);
-    this.detail.bar_number_name.push(data[this.detail.category]);
-    this.detail.bar_value.push(data["value"]);
-    this.detail.bar_number.push(1);
-  }
-
-  increment_bar_data(data: Data, index: number) {
-    this.detail.bar_value[index] += data["value"];
-    this.detail.bar_number[index]++;
   }
 
   make_ranking() {
@@ -119,6 +129,18 @@ export class DrawDetailGraphComponent implements OnInit {
       this.detail.total[0] += data["value"];
       this.detail.total[1]++;
     });
+  }
+
+  increment_bar_data(data: Data, index: number) {
+    this.detail.bar_value[index] += data["value"];
+    this.detail.bar_number[index]++;
+  }
+
+  add_bar_data(data: Data) {
+    this.detail.bar_value_name.push(data[this.detail.category]);
+    this.detail.bar_number_name.push(data[this.detail.category]);
+    this.detail.bar_value.push(data["value"]);
+    this.detail.bar_number.push(1);
   }
 
   set_lists(type: string, content: string, list) {

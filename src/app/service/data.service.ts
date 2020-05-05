@@ -67,10 +67,6 @@ export class DataService {
     // return of(DATA);
   }
 
-  next_subject() {
-    this.cloth_subject.next(this.data);
-  }
-
   // get_brand_data(): Observable<{name: string[]; value: number[]}> {
   // return this.clothes.pipe(
   //   map(data => {

@@ -1,47 +1,59 @@
-<div class="body">
-    <h1 class="title">{{detail.title}}</h1>
+<div *ngIf="detail.is_exist; else not_exist">
+    <div class="body">
+        <h1 class="title">{{detail.title}}</h1>
 
-    <div class="chart">
-        <div class="chart-value">
-            <h2>消費額の割合</h2>
+        <div class="chart">
+            <div class="chart-value">
+                <h2>消費額の割合</h2>
 
-            <h3>合計消費額：<span class="total-value">{{detail.total[0] | currency:'JPY'}}</span></h3>
+                <h3>合計消費額：<span class="total-value">{{detail.total[0] | currency:'JPY'}}</span></h3>
 
-            <canvas baseChart [datasets]="detail.bar_value_data" [labels]="detail.bar_value_name"
-                [options]="detail.bar_options" [legend]="detail.bar_legend" [chartType]="detail.bar_type">
-            </canvas>
+                <canvas baseChart [datasets]="detail.bar_value_data" [labels]="detail.bar_value_name"
+                    [colors]="detail.bar_colors" [options]="detail.bar_options" [legend]="detail.bar_legend"
+                    [chartType]="detail.bar_type">
+                </canvas>
+            </div>
+
+            <div class="chart-number">
+                <h2>所有数の割合</h2>
+
+                <h3>合計所有数：<span class="total-number">{{detail.total[1] | number}}個</span></h3>
+
+                <canvas baseChart [datasets]="detail.bar_number_data" [labels]="detail.bar_number_name"
+                    [colors]="detail.bar_colors" [options]="detail.bar_options" [legend]="detail.bar_legend"
+                    [chartType]="detail.bar_type">
+                </canvas>
+            </div>
         </div>
 
-        <div class="chart-number">
-            <h2>所有数の割合</h2>
+        <div class="data">
+            <h2>所有アイテム</h2>
 
-            <h3>合計所有数：<span class="total-number">{{detail.total[1] | number}}個</span></h3>
-
-            <canvas baseChart [datasets]="detail.bar_number_data" [labels]="detail.bar_number_name"
-                [options]="detail.bar_options" [legend]="detail.bar_legend" [chartType]="detail.bar_type">
-            </canvas>
-        </div>
-    </div>
-
-    <div class="data">
-        <h2>所有アイテム</h2>
-
-        <div class="cards">
-            <mat-card *ngFor="let data of detail.cloth_data" class="card">
-                <mat-card-header>
-                    <mat-card-title>
-                        <span>{{data.item_name}}</span>
-                    </mat-card-title>
-                    <mat-card-subtitle>
-                        <span>{{data.brand}}</span>
-                    </mat-card-subtitle>
-                </mat-card-header>
-                <img mat-card-image src="{{data.image}}" alt="{{data.item_name}}'s details">
-                <mat-card-content>
-                    <p>{{data.item}}</p>
-                    <p>{{data.value | currency:'JPY'}}</p>
-                </mat-card-content>
-            </mat-card>
+            <div class="cards">
+                <mat-card *ngFor="let data of detail.cloth_data" class="card">
+                    <mat-card-header>
+                        <mat-card-title>
+                            <span>{{data.item_name}}</span>
+                        </mat-card-title>
+                        <mat-card-subtitle>
+                            <span>{{data.brand}}</span>
+                        </mat-card-subtitle>
+                    </mat-card-header>
+                    <img mat-card-image src="{{data.image}}" alt="{{data.item_name}}'s details">
+                    <mat-card-content>
+                        <p>{{data.item}}</p>
+                        <p>{{data.value | currency:'JPY'}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         </div>
     </div>
 </div>
+
+<ng-template #not_exist>
+    <div class="not_exist">
+        <h1>"{{detail.params[1]}}"</h1>
+        <h1>このブランドは登録されていません</h1>
+        <a routerLink="/">トップへ戻る</a>
+    </div>
+</ng-template>

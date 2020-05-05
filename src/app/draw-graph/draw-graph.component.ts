@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit, Input, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, NgZone, ChangeDetectorRef } from '@angular/core';
 import { Data } from '../data';
 import { DataService } from '../service/data.service';
 import { Observable } from 'rxjs';
@@ -11,8 +11,7 @@ import { Session } from '../Session';
   templateUrl: './draw-graph.component.html',
   styleUrls: ['./draw-graph.component.scss']
 })
-export class DrawGraphComponent implements OnInit, AfterContentInit {
-  @Input() cloth_data;
+export class DrawGraphComponent implements OnInit {
   @Input() title: string;
   @Input() category: string;
   @Input() content: string;
@@ -27,17 +26,6 @@ export class DrawGraphComponent implements OnInit, AfterContentInit {
   bar_names: string[] = [];
   bar_values: number[] = [];
   bar_colors: Array<any> = [
-    // { backgroundColor: 'rgb(255, 99, 132)' },
-    // { backgroundColor: 'rgb(54, 162, 235)' },
-    // { backgroundColor: 'rgb(255, 206, 86)' },
-    // { backgroundColor: 'rgb(231, 233, 237)' },
-    // { backgroundColor: 'rgb(75, 192, 192)' },
-    // { backgroundColor: 'rgb(151, 187, 205)' },
-    // { backgroundColor: 'rgb(220, 220, 220)' },
-    // { backgroundColor: 'rgb(247, 70, 74)' },
-    // { backgroundColor: 'rgb(70, 191, 189)' },
-    // { backgroundColor: 'rgb(253, 180, 92)' },
-    // { backgroundColor: 'rgb(148, 159, 177)' },
     {
       backgroundColor: [
         'rgb(255, 99, 132)',
@@ -137,13 +125,6 @@ export class DrawGraphComponent implements OnInit, AfterContentInit {
     // });
 
 
-  }
-
-  ngAfterContentInit() {
-    // this.make_ranking();
-    // this.sort_ranking();
-    // this.display_filter();
-    // this.change_detector.detectChanges();
   }
 
   increment_total(data: number, index?: number) {
