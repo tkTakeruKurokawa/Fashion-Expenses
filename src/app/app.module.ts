@@ -32,6 +32,7 @@ import { environment } from "../environments/environment";
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     DrawDetailGraphComponent,
     SignUpComponent,
     SignInComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
