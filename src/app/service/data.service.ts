@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject, } from 'rxjs';
 
 import { Data } from "../data";
-import { DATA } from "../mock-data";
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { SessionService } from './session.service';
 import { Session } from '../Session';
 
@@ -14,9 +13,11 @@ import { Session } from '../Session';
 export class DataService {
   data: Data[];
   cloth_subject = new BehaviorSubject<Data[]>(this.data);
-  // cloth_subject;
-  // clothes = this.cloth_subject.asObservable();
   clothes: Observable<Data[]>;
+
+  result_subject = new Subject<Map<string, string>>();
+  result: Map<string, string>;
+  search_property = ["brand", "item"];
 
   constructor(
     private session_service: SessionService,
@@ -79,30 +80,32 @@ export class DataService {
     if (!term.trim()) {
       return of();
     }
-    let result = new Map<string, string>();
+    this.result = new Map<string, string>();
 
-    DATA.forEach(value => {
-      Object.keys(value).forEach(key => {
-        if (key === "brand" || key === "item") {
-          let target: string = value[key];
+    this.clothes.subscribe(data_list => {
+      data_list.forEach(data => {
+        this.search_property.forEach(property => {
+          let target = data[property];
           if (this.check_ja(term)) {
             if (this.to_kana(target).includes(this.to_kana(term))) {
-              if (!result.has(target)) {
-                result.set(target, key);
+              if (!this.result.has(target)) {
+                this.result.set(target, property);
               }
             }
           } else {
             if (target.toUpperCase().includes(term.toUpperCase())) {
-              if (!result.has(target)) {
-                result.set(target, key);
+              if (!this.result.has(target)) {
+                this.result.set(target, property);
               }
             }
           }
-        }
+        })
       });
-    });
+      this.result_subject.next(this.result);
+    })
 
-    return of(result);
+
+    return this.result_subject.pipe(take(1));
   }
 
   check_ja(str: string) {

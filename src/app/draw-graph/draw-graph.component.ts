@@ -127,6 +127,25 @@ export class DrawGraphComponent implements OnInit {
 
   }
 
+  make_ranking() {
+    if (this.category === "brands") {
+      this.name_key = "brand";
+    } else {
+      this.name_key = "item";
+    }
+
+    this.clothes.forEach(data => {
+      if (this.names.includes(data[this.name_key])) {
+        let index = this.names.findIndex(name => name === data[this.name_key]);
+        this.increment_total(data[this.content], index);
+      } else {
+        this.names.push(data[this.name_key]);
+        this.set_value(data[this.content]);
+      }
+      this.increment_total(data[this.content]);
+    });
+  }
+
   increment_total(data: number, index?: number) {
     if (typeof index !== 'undefined') {
       if (this.content === "value") {
@@ -149,25 +168,6 @@ export class DrawGraphComponent implements OnInit {
     } else {
       this.values.push(1);
     }
-  }
-
-  make_ranking() {
-    if (this.category === "brands") {
-      this.name_key = "brand";
-    } else {
-      this.name_key = "item";
-    }
-
-    this.clothes.forEach(data => {
-      if (this.names.includes(data[this.name_key])) {
-        let index = this.names.findIndex(name => name === data[this.name_key]);
-        this.increment_total(data[this.content], index);
-      } else {
-        this.names.push(data[this.name_key]);
-        this.set_value(data[this.content]);
-      }
-      this.increment_total(data[this.content]);
-    });
   }
 
   swap(top: number, moved_top: number) {

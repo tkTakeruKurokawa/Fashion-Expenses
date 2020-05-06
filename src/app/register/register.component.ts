@@ -15,7 +15,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.session_service.session_state.subscribe((session: Session) => {
       if (session) {
-        console.log(session);
         this.login = session.login;
       }
     });

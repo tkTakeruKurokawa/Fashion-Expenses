@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Data } from '../data';
 import { DataService } from '../service/data.service';
 import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 class Detail {
   title: string;
@@ -67,22 +68,26 @@ export class DrawDetailGraphComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.detail = new Detail();
     this.get_data_type();
   }
 
   get_data_type() {
-    this.active_router.pathFromRoot.forEach(urls => urls.url.subscribe(url => {
-      this.detail = new Detail();
+    this.active_router.pathFromRoot.forEach(urls => {
 
-      url.forEach(params => {
-        if (params.path.length >= 1) {
-          this.detail.params.push(params.path);
-        }
-      });
+      urls.url
+        .pipe(filter(url => url.length > 1))
+        .subscribe(url => {
+          url.forEach(params => {
+            if (params.path.length > 1) {
+              this.detail.params.push(params.path);
+            }
+          });
 
-      this.define_category();
-      this.get_data_list();
-    }));
+          this.define_category();
+          this.get_data_list();
+        })
+    });
     // this.detail.active_router.paramMap.subscribe(param => console.log(param));
     // console.log(this.detail.active_router);
   }
