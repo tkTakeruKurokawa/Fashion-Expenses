@@ -4,9 +4,10 @@ import { Router } from "@angular/router";
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, of, Subject } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, timeout } from 'rxjs/operators';
 
 import { Session } from "../Session";
+import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
