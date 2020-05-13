@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Data } from "./data";
-import { Session } from "./Session";
+import { Data } from "./class-interface/data";
+import { Session } from "./class-interface/Session";
 import { SessionService } from './service/session.service';
+import { DataService } from './service/data.service';
 
 @Component({
   selector: 'app-root',
@@ -11,20 +12,20 @@ import { SessionService } from './service/session.service';
 })
 export class AppComponent {
   data: Data;
-  login = false;
 
   constructor(
     protected router: Router,
     private session_service: SessionService,
+    private data_service: DataService
   ) {
     this.session_service.check_sign_in();
-    this.session_service.session_state.subscribe((session: Session) => {
-      if (session) {
-        console.log(session);
-        this.login = session.login;
-      }
-    });
+    // this.session_service.session_state.subscribe((session: Session) => {
+    //   if (session.login) {
+    //     this.data_service.get_data_from_firestore(session.uid);
+    //   }
+    // });
 
+    this.data_service.get_data_from_firestore();
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -35,6 +36,4 @@ export class AppComponent {
     });
   }
 
-  // this.db.collection("users").doc("Ml3PWz4WPhIlsvdUIiNH").collection("clothes").doc<Data>("lVzaafqGcVxgI1JQDw89").valueChanges().subscribe(data => console.log(data));
-  // this.db.doc<Data>("users/Ml3PWz4WPhIlsvdUIiNH/clothes/lVzaafqGcVxgI1JQDw89").valueChanges().subscribe(data => console.log(data));
 }

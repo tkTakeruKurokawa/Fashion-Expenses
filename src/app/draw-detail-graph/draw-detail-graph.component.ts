@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Data } from '../data';
+import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
 import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 class Detail {
   title: string;
   cloth_data: Data[];
   total: number[] = [0, 0];
-  panel_state: boolean = false;
-
-  params: string[] = [];
-  category: string;
 
   bar_value: number[] = [];
   bar_value_name: string[] = [];
@@ -21,6 +18,23 @@ class Detail {
   ];
   bar_number_data: any[] = [
     { data: this.bar_number },
+  ];
+  bar_colors: Array<any> = [
+    {
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(231, 233, 237)',
+        'rgb(75, 192, 192)',
+        'rgb(151, 187, 205)',
+        'rgb(220, 220, 220)',
+        'rgb(247, 70, 74)',
+        'rgb(70, 191, 189)',
+        'rgb(253, 180, 92)',
+        'rgb(148, 159, 177)'
+      ]
+    },
   ];
   bar_options: any = {
     responsive: true,
@@ -42,7 +56,11 @@ class Detail {
   styleUrls: ['./draw-detail-graph.component.scss']
 })
 export class DrawDetailGraphComponent implements OnInit {
-  detail: Detail;
+  detail: Detail = new Detail();
+
+  params: string[] = [];
+  category: string;
+  is_exist: boolean = false;
 
   constructor(
     private data_service: DataService,
@@ -54,64 +72,62 @@ export class DrawDetailGraphComponent implements OnInit {
   }
 
   get_data_type() {
-    this.active_router.pathFromRoot.forEach(urls => urls.url.subscribe(url => {
-      this.detail = new Detail();
+    this.active_router.pathFromRoot.forEach(urls => {
 
-      url.forEach(params => {
-        if (params.path.length >= 1) {
-          this.detail.params.push(params.path);
-        }
-      });
+      urls.url
+        .pipe(filter(url => url.length > 1))
+        .subscribe(url => {
+          url.forEach(params => {
+            if (params.path.length > 1) {
+              this.params.push(params.path);
+            }
+          });
 
-      this.define_category();
-      this.get_data_list();
-      this.make_ranking();
-      this.sort_ranking();
-    }));
+          this.define_category();
+          this.get_data_list();
+        })
+    });
     // this.detail.active_router.paramMap.subscribe(param => console.log(param));
     // console.log(this.detail.active_router);
   }
 
   define_category() {
-    if (this.detail.params[0] === "brands") {
-      this.detail.category = "item";
+    if (this.params[0] === "brands") {
+      this.category = "item_category";
     } else {
-      this.detail.category = "brand";
+      this.category = "brand";
     }
   }
 
   get_data_list() {
     let category;
-    if (this.detail.params[0] === "brands") {
+    if (this.params[0] === "brands") {
       category = "brand";
     } else {
-      category = "item";
+      category = "item_category";
     }
 
+
     this.data_service.get_cloth_data().subscribe(cloth_data => {
-      this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.detail.params[1]);
+      this.detail = new Detail();
+      this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]);
+
+      if (this.detail.cloth_data.length > 0) {
+        this.is_exist = true;
+      }
+
       this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
+      this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
+
+      this.make_ranking();
+      this.sort_ranking();
     });
-
-    this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
-  }
-
-  add_bar_data(data: Data) {
-    this.detail.bar_value_name.push(data[this.detail.category]);
-    this.detail.bar_number_name.push(data[this.detail.category]);
-    this.detail.bar_value.push(data["value"]);
-    this.detail.bar_number.push(1);
-  }
-
-  increment_bar_data(data: Data, index: number) {
-    this.detail.bar_value[index] += data["value"];
-    this.detail.bar_number[index]++;
   }
 
   make_ranking() {
     this.detail.cloth_data.forEach(data => {
-      if (this.detail.bar_value_name.includes(data[this.detail.category])) {
-        let index = this.detail.bar_value_name.findIndex(name => name === data[this.detail.category]);
+      if (this.detail.bar_value_name.includes(data[this.category])) {
+        let index = this.detail.bar_value_name.findIndex(name => name === data[this.category]);
         this.increment_bar_data(data, index);
       } else {
         this.add_bar_data(data);
@@ -119,6 +135,18 @@ export class DrawDetailGraphComponent implements OnInit {
       this.detail.total[0] += data["value"];
       this.detail.total[1]++;
     });
+  }
+
+  increment_bar_data(data: Data, index: number) {
+    this.detail.bar_value[index] += data["value"];
+    this.detail.bar_number[index]++;
+  }
+
+  add_bar_data(data: Data) {
+    this.detail.bar_value_name.push(data[this.category]);
+    this.detail.bar_number_name.push(data[this.category]);
+    this.detail.bar_value.push(data["value"]);
+    this.detail.bar_number.push(1);
   }
 
   set_lists(type: string, content: string, list) {

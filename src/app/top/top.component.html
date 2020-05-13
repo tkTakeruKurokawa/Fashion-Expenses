@@ -1,2 +1,8 @@
-<app-brands [display_number]="5" [show_others]="false"></app-brands>
-<app-items [display_number]="5" [show_others]="false"></app-items>
+<div *ngIf="number_of_data===0">
+    <app-no-data></app-no-data>
+</div>
+
+<div *ngIf="number_of_data > 0">
+    <app-brands [display_number]="5" [show_others]="false"></app-brands>
+    <app-items [display_number]="5" [show_others]="false"></app-items>
+</div>

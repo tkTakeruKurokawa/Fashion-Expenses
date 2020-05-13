@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, HostListener } from '@angular/core';
 import { Observable, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
-import { Data } from "../data";
+import { Data } from "../class-interface/data";
 import { DataService } from "../service/data.service";
 
 @Component({
@@ -31,7 +31,7 @@ export class SearchComponent implements OnInit {
 
     this.data_list$ = this.search_terms.pipe(
       // 各キーストロークの後、検索前に300ms待つ
-      debounceTime(300),
+      debounceTime(500),
 
       // 直前の検索語と同じ場合は無視する
       distinctUntilChanged(),

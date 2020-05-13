@@ -1,1 +1,65 @@
-<p>register works!</p>
+<div *ngIf="login">
+    <div *ngIf="!writable" class="add-button">
+        <button (click)="button_click()" mat-fab color="accent">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <div *ngIf="writable">
+        <div class="register">
+            <h1>アイテムを登録</h1>
+
+            <form class="form" [formGroup]="register_form" (ngSubmit)="register()">
+                <mat-form-field appearance="outline" [color]="color" class="element">
+                    <mat-label>ブランド名</mat-label>
+                    <input matInput id="brand" class="input" formControlName="brand" placeholder="ユニクロ" required>
+                    <mat-error *ngIf="brand_control().invalid">{{error_message}}</mat-error>
+                    <mat-hint>
+                        ブランド名は統一して登録してください<br>
+                        一文字でも異なると違うブランドとして認識されます
+                    </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" [color]="color" class="element">
+                    <mat-label>アイテム名</mat-label>
+                    <input matInput id="item_name" class="input" formControlName="item_name" placeholder="オーバーサイズシャツ"
+                        required>
+                    <mat-error *ngIf="item_name_control().invalid">{{error_message}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" [color]="color" class="element">
+                    <mat-label>アイテムカテゴリ</mat-label>
+                    <mat-select id="item_category" class="input" formControlName="item_category" required>
+                        <mat-option *ngFor="let option of options" value="{{option}}">{{option}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="item_category_control().invalid">{{error_message}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" [color]="color" class="element">
+                    <mat-label>価格</mat-label>
+                    <input matInput id="value" type="number" class="input" formControlName="value" placeholder="10000"
+                        required>
+                    <mat-error *ngIf="value_control().invalid">{{error_message}}</mat-error>
+                </mat-form-field>
+
+                <div class="element image">
+                    <span>写真を追加（任意）</span>
+                    <span *ngIf="file_name.length">アップロードされる画像：{{file_name}}</span>
+                    <input hidden #file_upload type="file" accept="image/*" formControlName="image"
+                        (change)="set_image_data($event)">
+                    <button (click)="file_upload.click()" type="button" class="image_icon">
+                        <mat-icon>add_photo_alternate</mat-icon>
+                    </button>
+                </div>
+
+                <div class="element button">
+                    <a mat-raised-button (click)="cancel()">キャンセル</a>
+                    <button mat-raised-button [disabled]="register_form.invalid" color="accent" type="submit"
+                        class="submit_button">登録する</button>
+                    <a mat-raised-button [disabled]="register_form.invalid" color="accent"
+                        (click)="continue_register()">登録して続ける</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

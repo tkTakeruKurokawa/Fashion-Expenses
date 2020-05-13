@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-top',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./top.component.scss']
 })
 export class TopComponent implements OnInit {
+  number_of_data: number = 0;
 
-  constructor() { }
+  constructor(private data_service: DataService) { }
 
   ngOnInit() {
+    this.data_service.get_clothes_length()
+      .subscribe(length => this.number_of_data = length);
   }
 
 }

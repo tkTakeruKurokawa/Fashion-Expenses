@@ -4,9 +4,10 @@ import { Router } from "@angular/router";
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, of, Subject } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, timeout } from 'rxjs/operators';
 
-import { Session } from "../Session";
+import { Session } from "../class-interface/Session";
+import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +32,11 @@ export class SessionService {
       //   return this.create_user(_auth.user.uid);
       //   return auth.user.sendEmailVerification();
       // })
-      // .then(() => {
+      // .then(auth => {
       //   return this.create_user(auth.user.uid);
       // })
       .then(() => {
-        return this.router.navigate(['/sign-in']);
+        return this.router.navigate(['/']);
       })
       // .then(() => alert('${email}宛にメールアドレス確認メールを送信しました'))
       .then(() => alert(email + ' でアカウントを作成しました。'))
@@ -79,9 +80,11 @@ export class SessionService {
     this.auth
       .authState
       .subscribe(auth => {
-        this.session.login = (!!auth);
-        this.session.uid = auth.uid;
-        this.session_subject.next(this.session);
+        if (!!auth) {
+          this.session.login = true;
+          this.session.uid = auth.uid;
+          this.session_subject.next(this.session);
+        }
       });
   }
 
@@ -95,10 +98,6 @@ export class SessionService {
           return this.session;
         })
       )
-  }
-
-  check_login(): boolean {
-    return this.session.login
   }
 
   sign_out() {
@@ -120,6 +119,6 @@ export class SessionService {
     return this.store
       .collection('users/')
       .doc(uid)
-      .set(Object.assign({}, uid));
+      .set({ "uid": uid });
   }
 }

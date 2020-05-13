@@ -1,13 +1,7 @@
-<div *ngIf="login">
-    <app-header></app-header>
-</div>
+<app-header></app-header>
 
 <div class="main">
     <router-outlet></router-outlet>
 </div>
 
-<div *ngIf="login" class="position">
-    <button mat-fab color="accent">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
+<app-register></app-register>

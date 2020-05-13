@@ -1,14 +1,16 @@
 <mat-toolbar color="accent">
     <mat-toolbar-row>
         <span>
-            <a mat-button routerLink="top/" class="title">Fashion Expenses</a>
+            <a mat-button routerLink="" class="title">Fashion Expenses</a>
         </span>
-        <div class="menu">
+
+        <!-- <div *ngIf="login"> -->
+        <div *ngIf="login" class="menu">
             <!-- <mat-chip-list aria-label="Fish selection">
-                <mat-chip color="accent" selected routerLink="brands/" ">ブランド</mat-chip>
-                <mat-chip color=" accent" selected routerLink="items/">アイテム</mat-chip>
-                <mat-chip color="accent" selected routerLink="data-list/">登録データ</mat-chip>
-            </mat-chip-list> -->
+                    <mat-chip color="accent" selected routerLink="brands/" ">ブランド</mat-chip>
+                    <mat-chip color=" accent" selected routerLink="items/">アイテム</mat-chip>
+                    <mat-chip color="accent" selected routerLink="data-list/">登録データ</mat-chip>
+                </mat-chip-list> -->
             <div>
                 <a mat-button (click)=sign_out() routerLinkActive="sign_out">ログアウト</a>
             </div>
@@ -26,5 +28,9 @@
                 </app-search>
             </div>
         </div>
+        <div *ngIf="!login" class="menu">
+            <a mat-button routerLink="sign-in" routerLinkActive="sign_in">ログイン</a>
+        </div>
+        <!-- </div> -->
     </mat-toolbar-row>
 </mat-toolbar>

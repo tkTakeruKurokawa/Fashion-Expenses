@@ -9,9 +9,9 @@
 @include mat-core();
 
 // 色定義： オプションは hue カラーパレットで色コード指定, 参照: https://material.io/design/color/ and https://material.io/tools/color/
-$my-app-primary: mat-palette($mat-amber, 100);
+$my-app-primary: mat-palette($mat-amber, 50);
 $my-app-accent: mat-palette($mat-green, A400);
-$my-app-warn: mat-palette($mat-blue, 900);
+$my-app-warn: mat-palette($mat-red, A400);
 
 // テーマとして色定義をまとめる
 $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
