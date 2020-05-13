@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Data } from '../data';
+import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -8,10 +8,6 @@ class Detail {
   title: string;
   cloth_data: Data[];
   total: number[] = [0, 0];
-
-  params: string[] = [];
-  category: string;
-  is_exist: boolean = false;
 
   bar_value: number[] = [];
   bar_value_name: string[] = [];
@@ -60,7 +56,11 @@ class Detail {
   styleUrls: ['./draw-detail-graph.component.scss']
 })
 export class DrawDetailGraphComponent implements OnInit {
-  detail: Detail;
+  detail: Detail = new Detail();
+
+  params: string[] = [];
+  category: string;
+  is_exist: boolean = false;
 
   constructor(
     private data_service: DataService,
@@ -68,7 +68,6 @@ export class DrawDetailGraphComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.detail = new Detail();
     this.get_data_type();
   }
 
@@ -80,7 +79,7 @@ export class DrawDetailGraphComponent implements OnInit {
         .subscribe(url => {
           url.forEach(params => {
             if (params.path.length > 1) {
-              this.detail.params.push(params.path);
+              this.params.push(params.path);
             }
           });
 
@@ -93,26 +92,28 @@ export class DrawDetailGraphComponent implements OnInit {
   }
 
   define_category() {
-    if (this.detail.params[0] === "brands") {
-      this.detail.category = "item";
+    if (this.params[0] === "brands") {
+      this.category = "item_category";
     } else {
-      this.detail.category = "brand";
+      this.category = "brand";
     }
   }
 
   get_data_list() {
     let category;
-    if (this.detail.params[0] === "brands") {
+    if (this.params[0] === "brands") {
       category = "brand";
     } else {
-      category = "item";
+      category = "item_category";
     }
 
+
     this.data_service.get_cloth_data().subscribe(cloth_data => {
-      this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.detail.params[1]);
+      this.detail = new Detail();
+      this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]);
 
       if (this.detail.cloth_data.length > 0) {
-        this.detail.is_exist = true;
+        this.is_exist = true;
       }
 
       this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
@@ -125,8 +126,8 @@ export class DrawDetailGraphComponent implements OnInit {
 
   make_ranking() {
     this.detail.cloth_data.forEach(data => {
-      if (this.detail.bar_value_name.includes(data[this.detail.category])) {
-        let index = this.detail.bar_value_name.findIndex(name => name === data[this.detail.category]);
+      if (this.detail.bar_value_name.includes(data[this.category])) {
+        let index = this.detail.bar_value_name.findIndex(name => name === data[this.category]);
         this.increment_bar_data(data, index);
       } else {
         this.add_bar_data(data);
@@ -142,8 +143,8 @@ export class DrawDetailGraphComponent implements OnInit {
   }
 
   add_bar_data(data: Data) {
-    this.detail.bar_value_name.push(data[this.detail.category]);
-    this.detail.bar_number_name.push(data[this.detail.category]);
+    this.detail.bar_value_name.push(data[this.category]);
+    this.detail.bar_number_name.push(data[this.category]);
     this.detail.bar_value.push(data["value"]);
     this.detail.bar_number.push(1);
   }

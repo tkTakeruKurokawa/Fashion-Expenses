@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, HostListener } from '@angular/core';
 import { Observable, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
-import { Data } from "../data";
+import { Data } from "../class-interface/data";
 import { DataService } from "../service/data.service";
 
 @Component({

@@ -3,18 +3,19 @@
 
     <div class="main">
         <div class="chart">
-            <canvas baseChart [data]="bar_values" [labels]="bar_names" [colors]="bar_colors" [options]="bar_options"
-                [legend]="bar_legend" [chartType]="bar_type">
+            <canvas baseChart [data]="draw_graph.bar_values" [labels]="draw_graph.bar_names"
+                [colors]="draw_graph.bar_colors" [options]="draw_graph.bar_options" [legend]="draw_graph.bar_legend"
+                [chartType]="draw_graph.bar_type">
             </canvas>
         </div>
 
         <div class="list">
             <div class="total">
                 合計（両コラボアイテム含み）：
-                <span *ngIf="content === 'value'; else number">{{total | currency:'JPY'}}</span>
-                <ng-template #number>{{total | number}}個</ng-template>
+                <span *ngIf="content === 'value'; else number">{{draw_graph.total | currency:'JPY'}}</span>
+                <ng-template #number>{{draw_graph.total | number}}個</ng-template>
             </div>
-            <div *ngFor="let name of names; let i = index">
+            <div *ngFor="let name of draw_graph.names; let i = index">
                 <div *ngIf="i<display_number" class="data data_{{i+1}}">
                     <div class="rank rank_{{i+1}}">
                         {{i+1}}位
@@ -23,8 +24,9 @@
                         {{name}}
                     </a>
                     <div class="value value_{{i+1}}">
-                        <span *ngIf="content === 'value' ; else top_value">{{values[i] | currency:'JPY'}}</span>
-                        <ng-template #top_value>{{values[i] | number}}個</ng-template>
+                        <span
+                            *ngIf="content === 'value' ; else top_value">{{draw_graph.values[i] | currency:'JPY'}}</span>
+                        <ng-template #top_value>{{draw_graph.values[i] | number}}個</ng-template>
                     </div>
                 </div>
             </div>
@@ -32,10 +34,10 @@
             <mat-expansion-panel *ngIf="show_others" (opened)="panel_state = true" (closed)="panel_state = false">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{ panel_state ? '閉じる' : '続きを開く'  }}
+                        {{ draw_graph.panel_state ? '閉じる' : '続きを開く'  }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <div *ngFor="let name of names; let i = index">
+                <div *ngFor="let name of draw_graph.names; let i = index">
                     <div *ngIf="i >= display_number" class="data">
                         <div class="rank">
                             {{i+1}}位
@@ -44,8 +46,9 @@
                             {{name}}
                         </a>
                         <div class="value">
-                            <span *ngIf="content === 'value'; else others_value">{{values[i] | currency:'JPY'}}</span>
-                            <ng-template #others_value>{{values[i] | number}}個</ng-template>
+                            <span
+                                *ngIf="content === 'value'; else others_value">{{draw_graph.values[i] | currency:'JPY'}}</span>
+                            <ng-template #others_value>{{draw_graph.values[i] | number}}個</ng-template>
                         </div>
                     </div>
                 </div>

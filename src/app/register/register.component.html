@@ -45,7 +45,8 @@
                 <div class="element image">
                     <span>写真を追加（任意）</span>
                     <span *ngIf="file_name.length">アップロードされる画像：{{file_name}}</span>
-                    <input hidden #file_upload type="file" accept="image/*" formControlName="image">
+                    <input hidden #file_upload type="file" accept="image/*" formControlName="image"
+                        (change)="set_image_data($event)">
                     <button (click)="file_upload.click()" type="button" class="image_icon">
                         <mat-icon>add_photo_alternate</mat-icon>
                     </button>

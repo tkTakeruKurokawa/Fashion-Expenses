@@ -6,7 +6,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, map, timeout } from 'rxjs/operators';
 
-import { Session } from "../Session";
+import { Session } from "../class-interface/Session";
 import { resolve } from 'url';
 
 @Injectable({
@@ -36,7 +36,7 @@ export class SessionService {
       //   return this.create_user(auth.user.uid);
       // })
       .then(() => {
-        return this.router.navigate(['/sign-in']);
+        return this.router.navigate(['/']);
       })
       // .then(() => alert('${email}宛にメールアドレス確認メールを送信しました'))
       .then(() => alert(email + ' でアカウントを作成しました。'))

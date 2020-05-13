@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Data } from "./data";
-import { Session } from "./Session";
+import { Data } from "./class-interface/data";
+import { Session } from "./class-interface/Session";
 import { SessionService } from './service/session.service';
 import { DataService } from './service/data.service';
 

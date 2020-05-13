@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../service/session.service';
-import { Session } from '../Session';
+import { Session } from '../class-interface/Session';
 import { DataService } from '../service/data.service';
 
 

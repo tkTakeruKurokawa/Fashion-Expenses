@@ -1,4 +1,4 @@
-<div *ngIf="detail.is_exist; else not_exist">
+<div *ngIf="is_exist; else not_exist">
     <div class="body">
         <h1 class="title">{{detail.title}}</h1>
 
@@ -39,9 +39,9 @@
                             <span>{{data.brand}}</span>
                         </mat-card-subtitle>
                     </mat-card-header>
-                    <img mat-card-image src="{{data.image}}" alt="{{data.item_name}}'s details">
+                    <img mat-card-image src="{{data.url | async}}" alt="{{data.item_name}}'s details">
                     <mat-card-content>
-                        <p>{{data.item}}</p>
+                        <p>{{data.item_category}}</p>
                         <p>{{data.value | currency:'JPY'}}</p>
                     </mat-card-content>
                 </mat-card>
@@ -52,7 +52,7 @@
 
 <ng-template #not_exist>
     <div class="not_exist">
-        <h1>"{{detail.params[1]}}"</h1>
+        <h1>"{{params[1]}}"</h1>
         <h1>このブランドは登録されていません</h1>
         <a routerLink="/">トップへ戻る</a>
     </div>

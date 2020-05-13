@@ -1,23 +1,12 @@
 import { Component, OnInit, Input, NgZone, ChangeDetectorRef } from '@angular/core';
-import { Data } from '../data';
+import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
-import { Observable } from 'rxjs';
-import { take, switchMap, skip, filter, tap } from 'rxjs/operators';
+import { Observable, pipe, of } from 'rxjs';
+import { take, switchMap, skip, filter, tap, switchMapTo } from 'rxjs/operators';
 import { SessionService } from '../service/session.service';
-import { Session } from '../Session';
+import { Session } from '../class-interface/Session';
 
-@Component({
-  selector: 'app-draw-graph',
-  templateUrl: './draw-graph.component.html',
-  styleUrls: ['./draw-graph.component.scss']
-})
-export class DrawGraphComponent implements OnInit {
-  @Input() title: string;
-  @Input() category: string;
-  @Input() content: string;
-  @Input() display_number: number;
-  @Input() show_others: boolean;
-
+class DrawGraph {
   clothes: Data[] = [];
   names: string[] = [];
   values: number[] = [];
@@ -55,11 +44,26 @@ export class DrawGraphComponent implements OnInit {
   panel_state: boolean = false;
   name_key: string;
 
-  flag: boolean = false;
+  constructor() {
+  }
+}
+
+@Component({
+  selector: 'app-draw-graph',
+  templateUrl: './draw-graph.component.html',
+  styleUrls: ['./draw-graph.component.scss']
+})
+export class DrawGraphComponent implements OnInit {
+  @Input() title: string;
+  @Input() category: string;
+  @Input() content: string;
+  @Input() display_number: number;
+  @Input() show_others: boolean;
+
+  draw_graph: DrawGraph = new DrawGraph();
 
   constructor(
     private data_service: DataService,
-    private session_service: SessionService,
     private zone: NgZone,
     private change_detector: ChangeDetectorRef,
   ) { }
@@ -81,8 +85,11 @@ export class DrawGraphComponent implements OnInit {
     // this.data_service.get_cloth_data().subscribe(data => this.clothes = data);
 
     this.data_service.get_cloth_data()
+      // .pipe(take(1))
+      // .pipe(switchMap((data: Data[]) => this.set_clothes(data)))
       .subscribe(data => {
-        this.clothes = data;
+        this.draw_graph = new DrawGraph();
+        this.draw_graph.clothes = data;
         this.make_ranking();
         this.sort_ranking();
         this.display_filter();
@@ -127,19 +134,29 @@ export class DrawGraphComponent implements OnInit {
 
   }
 
+  set_clothes(data: Data[]): Observable<Data[]> {
+    console.log(this.draw_graph.clothes.length, data.length);
+
+    if (this.draw_graph.clothes.length !== data.length) {
+      return of(data);
+    } else {
+      return of();
+    }
+  }
+
   make_ranking() {
     if (this.category === "brands") {
-      this.name_key = "brand";
+      this.draw_graph.name_key = "brand";
     } else {
-      this.name_key = "item";
+      this.draw_graph.name_key = "item_category";
     }
 
-    this.clothes.forEach(data => {
-      if (this.names.includes(data[this.name_key])) {
-        let index = this.names.findIndex(name => name === data[this.name_key]);
+    this.draw_graph.clothes.forEach(data => {
+      if (this.draw_graph.names.includes(data[this.draw_graph.name_key])) {
+        let index = this.draw_graph.names.findIndex(name => name === data[this.draw_graph.name_key]);
         this.increment_total(data[this.content], index);
       } else {
-        this.names.push(data[this.name_key]);
+        this.draw_graph.names.push(data[this.draw_graph.name_key]);
         this.set_value(data[this.content]);
       }
       this.increment_total(data[this.content]);
@@ -149,34 +166,34 @@ export class DrawGraphComponent implements OnInit {
   increment_total(data: number, index?: number) {
     if (typeof index !== 'undefined') {
       if (this.content === "value") {
-        this.values[index] = this.values[index] + data;
+        this.draw_graph.values[index] = this.draw_graph.values[index] + data;
       } else {
-        this.values[index]++;
+        this.draw_graph.values[index]++;
       }
     } else {
       if (this.content === "value") {
-        this.total += data;
+        this.draw_graph.total += data;
       } else {
-        this.total++;
+        this.draw_graph.total++;
       }
     }
   }
 
   set_value(data: number) {
     if (this.content === "value") {
-      this.values.push(data);
+      this.draw_graph.values.push(data);
     } else {
-      this.values.push(1);
+      this.draw_graph.values.push(1);
     }
   }
 
   swap(top: number, moved_top: number) {
-    let tmp_values = this.values[top];
-    let tmp_names = this.names[top];
-    this.values[top] = this.values[moved_top];
-    this.names[top] = this.names[moved_top];
-    this.values[moved_top] = tmp_values;
-    this.names[moved_top] = tmp_names;
+    let tmp_values = this.draw_graph.values[top];
+    let tmp_names = this.draw_graph.names[top];
+    this.draw_graph.values[top] = this.draw_graph.values[moved_top];
+    this.draw_graph.names[top] = this.draw_graph.names[moved_top];
+    this.draw_graph.values[moved_top] = tmp_values;
+    this.draw_graph.names[moved_top] = tmp_names;
   }
 
   quick_sort(top: number, bottom: number) {
@@ -190,7 +207,7 @@ export class DrawGraphComponent implements OnInit {
     moved_top = top;
 
     for (moved_bottom = top + 1; moved_bottom <= bottom; moved_bottom++) {
-      if (this.values[moved_bottom] > this.values[top]) {
+      if (this.draw_graph.values[moved_bottom] > this.draw_graph.values[top]) {
         this.swap(++moved_top, moved_bottom);
       }
     }
@@ -201,21 +218,21 @@ export class DrawGraphComponent implements OnInit {
   }
 
   sort_ranking() {
-    this.quick_sort(0, this.values.length - 1);
+    this.quick_sort(0, this.draw_graph.values.length - 1);
   }
 
   display_filter() {
-    this.names.forEach((name, index) => {
+    this.draw_graph.names.forEach((name, index) => {
       if (index >= 10) {
-        if (this.bar_names.includes("その他")) {
-          this.bar_values[10] = this.bar_values[10] + this.values[index];
+        if (this.draw_graph.bar_names.includes("その他")) {
+          this.draw_graph.bar_values[10] = this.draw_graph.bar_values[10] + this.draw_graph.values[index];
         } else {
-          this.bar_names[10] = "その他";
-          this.bar_values[10] = this.values[10];
+          this.draw_graph.bar_names[10] = "その他";
+          this.draw_graph.bar_values[10] = this.draw_graph.values[10];
         }
       } else {
-        this.bar_names.push(name);
-        this.bar_values.push(this.values[index]);
+        this.draw_graph.bar_names.push(name);
+        this.draw_graph.bar_values.push(this.draw_graph.values[index]);
       }
     });
   }

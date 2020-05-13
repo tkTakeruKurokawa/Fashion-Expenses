@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Data } from '../data';
+import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
 import { Observable } from 'rxjs';
 
@@ -16,15 +16,14 @@ export class ItemsComponent implements OnInit {
   category: string = "items";
   contents: string[] = ["value", "item_category"];
 
-  constructor(private data_service: DataService) { }
+  number_of_data: number = 0;
+
+  constructor(
+    private data_service: DataService
+  ) { }
 
   ngOnInit() {
-    // this.get_data_list();
+    this.data_service.get_clothes_length()
+      .subscribe(length => this.number_of_data = length);
   }
-
-  // get_data_list() {
-  //   this.data_service.get_cloth_data().subscribe(cloth_data => {
-  //     this.cloth_data = cloth_data;
-  //   });
-  // }
 }
