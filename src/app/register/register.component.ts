@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractContro
 import { AngularFireStorage } from "@angular/fire/storage";
 import { Data } from "../class-interface/data";
 import { DataService } from '../service/data.service';
+import * as moment from "moment";
 
 @Component({
   selector: 'app-register',
@@ -13,6 +14,11 @@ import { DataService } from '../service/data.service';
 })
 export class RegisterComponent implements OnInit {
   register_form: FormGroup;
+  file: object = {};
+  file_exist: boolean = false;
+  file_name: string = "";
+  file_path: string = "";
+  uid: string = "";
 
   options: Array<string> = [
     "トップス",
@@ -35,15 +41,9 @@ export class RegisterComponent implements OnInit {
   ];
   color: string = 'accent';
   error_message: string = 'この入力は必須です';
-
-  file: object = {};
-  file_exist: boolean = false;
-  file_name: string = "";
-  file_path: string = "";
-
   login: boolean = false;
-  uid: string = "";
   writable: boolean = false;
+  sending: boolean = false;
 
   constructor(
     private session_service: SessionService,
@@ -93,7 +93,7 @@ export class RegisterComponent implements OnInit {
     this.file = event.target.files[0];
     this.file_exist = true;
     this.file_name = this.file["name"];
-    this.file_path = "users/" + this.uid + "/" + this.file_name;
+    this.file_path = "users/" + this.uid + "/" + moment().format() + "_" + this.file_name;
     console.log(this.file, this.file_path);
   }
 
@@ -111,13 +111,19 @@ export class RegisterComponent implements OnInit {
     this.upload_form();
   }
 
-  upload_form() {
+  async upload_form() {
+    this.sending = true;
+
     if (this.file_exist) {
-      this.afs.upload(this.file_path, this.file);
+      const storage_ref = this.afs.ref(this.file_path);
+      const result = await storage_ref.put(this.file, { 'cacheControl': 'public, max-age=86400' });
+      console.log(result);
     }
+
     const data = this.create_data();
     this.data_service.set_data_to_firestore(data);
     this.reset_form();
+    this.sending = false;
   }
 
   create_data(): Data {

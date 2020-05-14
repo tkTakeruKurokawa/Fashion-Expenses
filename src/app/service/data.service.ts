@@ -157,7 +157,8 @@ export class DataService {
       .doc(doc_key)
       .delete();
 
-    if (!image_path.match("no_image.png")) {
+
+    if ("no_image.png" !== image_path) {
       const storage_rf = this.storage.ref(image_path);
       storage_rf.delete();
     }
