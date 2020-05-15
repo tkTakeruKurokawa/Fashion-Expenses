@@ -16,7 +16,7 @@ export class ItemsComponent implements OnInit {
   category: string = "items";
   contents: string[] = ["value", "item_category"];
 
-  number_of_data: number = 0;
+  number_of_data: number;
 
   constructor(
     private data_service: DataService

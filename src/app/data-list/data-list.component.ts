@@ -11,7 +11,7 @@ import { DataService } from '../service/data.service';
 export class DataListComponent implements OnInit {
   cloth_data: Data[];
 
-  number_of_data: number = 0;
+  number_of_data: number;
 
   constructor(
     private data_service: DataService

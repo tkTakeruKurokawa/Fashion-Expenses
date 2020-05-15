@@ -60,7 +60,7 @@ export class DrawDetailGraphComponent implements OnInit {
 
   params: string[] = [];
   category: string;
-  is_exist: boolean = false;
+  is_exist: boolean;
 
   constructor(
     private data_service: DataService,

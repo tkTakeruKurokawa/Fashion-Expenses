@@ -7,7 +7,7 @@ import { DataService } from '../service/data.service';
   styleUrls: ['./top.component.scss']
 })
 export class TopComponent implements OnInit {
-  number_of_data: number = 0;
+  number_of_data: number;
 
   constructor(private data_service: DataService) { }
 
