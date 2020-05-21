@@ -86,8 +86,6 @@ export class DataService {
   }
 
   create_search_options_observable(cloth_data_list: Data[]) {
-    this.search_options = [];
-    this.brand_options = [];
     this.search_options = this.create_search_options(cloth_data_list);
   }
 
@@ -149,6 +147,8 @@ export class DataService {
       if (a.char < b.char) return -1;
       if (a.char > b.char) return 1;
     });
+
+    let autocomplete_list: Autocomplete[] = [];
     this.search_options.forEach(option => {
       option.elements.sort((a, b) => {
         if (a.category < b.category) return -1;
@@ -156,10 +156,14 @@ export class DataService {
         if (a.name < b.name) return -1;
         if (a.name > b.name) return 1;
       });
-      if (option.elements.find(element => element.category === "brands") !== void 0) {
-        this.brand_options.push(option);
-      }
+
+      option.elements
+        .filter(element => element.category === "brands")
+        .forEach(element => {
+          autocomplete_list = this.push_autocomplete(autocomplete_list, [option.char], [element.name], [element.category]);
+        })
     });
+    this.brand_options = autocomplete_list;
   }
 
   get_search_options_subject(): Observable<Autocomplete[]> {
