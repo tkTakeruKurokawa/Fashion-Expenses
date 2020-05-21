@@ -18,6 +18,8 @@ export class AppComponent {
     private session_service: SessionService,
     private data_service: DataService
   ) {
+    this.data_service.get_data_from_firestore();
+
     this.session_service.check_sign_in();
     // this.session_service.session_state.subscribe((session: Session) => {
     //   if (session.login) {
@@ -25,7 +27,6 @@ export class AppComponent {
     //   }
     // });
 
-    this.data_service.get_data_from_firestore();
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

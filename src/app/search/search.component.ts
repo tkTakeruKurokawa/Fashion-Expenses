@@ -1,48 +1,41 @@
-import { Component, ElementRef, OnInit, HostListener } from '@angular/core';
-import { Observable, Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { Component, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Observable, Subject, pipe, Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, startWith, map } from "rxjs/operators";
 import { Data } from "../class-interface/data";
 import { DataService } from "../service/data.service";
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { Autocomplete } from '../class-interface/autocomplete';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
-  show: boolean = false;
-  data_list$: Observable<Map<string, string>>;
-  private search_terms = new Subject<string>();
-
-  @HostListener('document:click', ['$event'])
-  on_click(event) {
-    this.show = false;
-    if (this.element_ref.nativeElement.contains(event.target)) {
-      this.show = true;
-    }
-  };
+export class SearchComponent implements OnInit, OnDestroy {
+  search = new FormControl('');
+  search_options: Observable<Autocomplete[]>;
+  subscription: Subscription;
 
   constructor(
-    private element_ref: ElementRef,
     private data_service: DataService
   ) { }
 
   ngOnInit() {
-
-    this.data_list$ = this.search_terms.pipe(
-      // 各キーストロークの後、検索前に300ms待つ
-      debounceTime(500),
-
-      // 直前の検索語と同じ場合は無視する
-      distinctUntilChanged(),
-
-      // 検索語が変わる度に、新しい検索observableにスイッチする
-      switchMap((term: string) => this.data_service.search_data(term)),
-    );
+    this.subscription = this.data_service.get_search_options_subject()
+      .subscribe(() => {
+        this.search_options = this.search
+          .valueChanges
+          .pipe(
+            startWith(''),
+            // debounceTime(500),
+            // distinctUntilChanged(),
+            map(term => this.data_service.filter_options("search", term)),
+          );
+      });
   }
 
-  search(term: string): void {
-    this.search_terms.next(term);
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
 

@@ -1,7 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Data } from '../class-interface/data';
-import { DataService } from '../service/data.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-items',
@@ -13,17 +10,10 @@ export class ItemsComponent implements OnInit {
   @Input() show_others: boolean = true;
 
   titles: string[] = ["アイテムカテゴリごとの消費額", "アイテムカテゴリごとの所持数"];
-  category: string = "items";
+  categories: string[] = ["item_category", "item_category"];
   contents: string[] = ["value", "item_category"];
 
-  number_of_data: number = 0;
+  constructor() { }
 
-  constructor(
-    private data_service: DataService
-  ) { }
-
-  ngOnInit() {
-    this.data_service.get_clothes_length()
-      .subscribe(length => this.number_of_data = length);
-  }
+  ngOnInit() { }
 }

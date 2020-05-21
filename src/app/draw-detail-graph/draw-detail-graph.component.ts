@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 class Detail {
   title: string;
@@ -55,12 +56,14 @@ class Detail {
   templateUrl: './draw-detail-graph.component.html',
   styleUrls: ['./draw-detail-graph.component.scss']
 })
-export class DrawDetailGraphComponent implements OnInit {
+export class DrawDetailGraphComponent implements OnInit, OnDestroy {
   detail: Detail = new Detail();
 
   params: string[] = [];
   category: string;
-  is_exist: boolean = false;
+  data_count: number;
+
+  subscription: Subscription;
 
   constructor(
     private data_service: DataService,
@@ -77,9 +80,10 @@ export class DrawDetailGraphComponent implements OnInit {
       urls.url
         .pipe(filter(url => url.length > 1))
         .subscribe(url => {
-          url.forEach(params => {
+          url.forEach((params, index) => {
+            // console.log(params);
             if (params.path.length > 1) {
-              this.params.push(params.path);
+              this.params[index] = params.path;
             }
           });
 
@@ -87,6 +91,8 @@ export class DrawDetailGraphComponent implements OnInit {
           this.get_data_list();
         })
     });
+
+
     // this.detail.active_router.paramMap.subscribe(param => console.log(param));
     // console.log(this.detail.active_router);
   }
@@ -108,14 +114,11 @@ export class DrawDetailGraphComponent implements OnInit {
     }
 
 
-    this.data_service.get_cloth_data().subscribe(cloth_data => {
+    this.subscription = this.data_service.get_cloth_data().subscribe(cloth_data => {
       this.detail = new Detail();
       this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]);
 
-      if (this.detail.cloth_data.length > 0) {
-        this.is_exist = true;
-      }
-
+      this.data_count = this.detail.cloth_data.length;
       this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
       this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
 
@@ -221,5 +224,9 @@ export class DrawDetailGraphComponent implements OnInit {
   sort_ranking() {
     this.quick_sort("value", 0, this.detail.bar_value.length - 1);
     this.quick_sort("number", 0, this.detail.bar_number.length - 1);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

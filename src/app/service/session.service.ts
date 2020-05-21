@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap, map, timeout } from 'rxjs/operators';
 
@@ -28,17 +28,12 @@ export class SessionService {
     this.auth
       .auth
       .createUserWithEmailAndPassword(email, password)
-      // .then(_auth => {
-      //   return this.create_user(_auth.user.uid);
-      //   return auth.user.sendEmailVerification();
-      // })
-      // .then(auth => {
-      //   return this.create_user(auth.user.uid);
-      // })
-      .then(() => {
+      .then(auth => {
+        this.session.login = true;
+        this.session.uid = auth.user.uid;
+        this.session_subject.next(this.session);
         return this.router.navigate(['/']);
       })
-      // .then(() => alert('${email}宛にメールアドレス確認メールを送信しました'))
       .then(() => alert(email + ' でアカウントを作成しました。'))
       .catch(err => {
         console.log(err);
@@ -50,19 +45,7 @@ export class SessionService {
     this.auth
       .auth
       .signInWithEmailAndPassword(email, password)
-      // .then(auth => {
-      //   if (!auth.user.emailVerified) {
-      //     this.auth.auth.signOut();
-      //     alert('メールアドレスが確認できていません');
-      //   } else {
-      //     this.login = true;
-      //     this.uid = auth.user.uid;
-      //     return this.router.navigate(['/top']);
-      //   }
-      // })
       .then(auth => {
-        // this.uid = auth.user.uid;
-        // console.log(this.store.collection('users').doc(this.uid).valueChanges());
         this.session.login = true;
         this.session.uid = auth.user.uid;
         this.session_subject.next(this.session);
@@ -113,12 +96,5 @@ export class SessionService {
         console.log(err);
         alert('ログアウトに失敗しました。\n' + err);
       })
-  }
-
-  create_user(uid: string) {
-    return this.store
-      .collection('users/')
-      .doc(uid)
-      .set({ "uid": uid });
   }
 }

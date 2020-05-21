@@ -1,11 +1,10 @@
 <mat-form-field>
-    <input matInput type="search" #search_box id="search-box" (input)="search(search_box.value)" placeholder="search" />
+    <input matInput [matAutocomplete]="autocomplete" type="search" placeholder="search" [formControl]="search" />
+    <mat-autocomplete #autocomplete="matAutocomplete">
+        <mat-optgroup *ngFor="let search of search_options | async" [label]="search.char">
+            <mat-option *ngFor="let element of search.elements" [value]="element.name">
+                <a [routerLink]="['/' + element.category, element.name | escape]">{{ element.name }}</a>
+            </mat-option>
+        </mat-optgroup>
+    </mat-autocomplete>
 </mat-form-field>
-<div class="search_result">
-    <div *ngFor="let data of data_list$ | async | keyvalue">
-        <a *ngIf="show && search_box.value !== ''" [routerLink]="['/' + data.value + 's', data.key | escape]"
-            (click)="search_box.value = ''" class="data">
-            {{data.key}}
-        </a>
-    </div>
-</div>

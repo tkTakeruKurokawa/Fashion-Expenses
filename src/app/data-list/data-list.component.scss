@@ -14,6 +14,7 @@
     flex-direction: column;
     justify-content: space-around;
     width: 20%;
+    min-width: 150px;
     margin: 10px 5px;
 
     mat-card-header {
@@ -23,6 +24,14 @@
         font-weight: bold;
       }
     }
+
+    .image {
+      margin: 0 auto;
+      height: 300px;
+      width: 100%;
+      object-fit: contain;
+    }
+
     .action {
       display: -webkit-flex;
       display: flex;
