@@ -1,9 +1,10 @@
 <mat-form-field>
-    <input matInput [matAutocomplete]="autocomplete" type="search" placeholder="search" [formControl]="search" />
+    <input matInput [matAutocomplete]="autocomplete" type="search" placeholder="search" [formControl]="search" #input />
     <mat-autocomplete #autocomplete="matAutocomplete">
         <mat-optgroup *ngFor="let search of search_options | async" [label]="search.char">
-            <mat-option *ngFor="let element of search.elements" [value]="element.name">
-                <a [routerLink]="['/' + element.category, element.name | escape]">{{ element.name }}</a>
+            <mat-option *ngFor="let element of search.elements" id="option">
+                <a class="element" [routerLink]="['/' + element.category, element.name | escape]"
+                    (click)="reset_term()">{{ element.name }}</a>
             </mat-option>
         </mat-optgroup>
     </mat-autocomplete>
