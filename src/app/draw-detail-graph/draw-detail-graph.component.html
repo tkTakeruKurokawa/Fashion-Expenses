@@ -1,4 +1,12 @@
-<div *ngIf="is_exist; else not_exist">
+<div *ngIf="data_count === 0">
+    <div class="not_exist">
+        <h1>"{{params[1]}}"</h1>
+        <h1>は登録されていません</h1>
+        <a routerLink="/">トップへ戻る</a>
+    </div>
+</div>
+
+<div *ngIf="data_count > 0">
     <div class="body">
         <h1 class="title">{{detail.title}}</h1>
 
@@ -49,11 +57,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #not_exist>
-    <div class="not_exist">
-        <h1>"{{params[1]}}"</h1>
-        <h1>このブランドは登録されていません</h1>
-        <a routerLink="/">トップへ戻る</a>
-    </div>
-</ng-template>

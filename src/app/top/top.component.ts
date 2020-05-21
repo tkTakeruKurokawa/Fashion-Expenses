@@ -7,13 +7,13 @@ import { DataService } from '../service/data.service';
   styleUrls: ['./top.component.scss']
 })
 export class TopComponent implements OnInit {
-  number_of_data: number;
+  titles: string[] = ["ブランドごとの消費額", "ブランドごとの所持数", "アイテムカテゴリごとの消費額", "アイテムカテゴリごとの所持数"];
+  categories: string[] = ["brand", "brand", "item_category", "item_category"];
+  contents: string[] = ["value", "item_category", "value", "item_category"];
+  display_number: number = 5;
+  show_others: boolean = false;
 
-  constructor(private data_service: DataService) { }
+  constructor() { }
 
-  ngOnInit() {
-    this.data_service.get_clothes_length()
-      .subscribe(length => this.number_of_data = length);
-  }
-
+  ngOnInit() { }
 }

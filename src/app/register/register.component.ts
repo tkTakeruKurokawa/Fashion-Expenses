@@ -4,8 +4,12 @@ import { Session } from '../class-interface/Session';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { Data } from "../class-interface/data";
+import { Autocomplete } from "../class-interface/autocomplete";
 import { DataService } from '../service/data.service';
+import { Options } from "../class-interface/item-categories";
 import * as moment from "moment";
+import { Observable } from 'rxjs';
+import { startWith, map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
@@ -20,30 +24,14 @@ export class RegisterComponent implements OnInit {
   file_path: string = "";
   uid: string = "";
 
-  options: Array<string> = [
-    "トップス",
-    "ジャケット",
-    "アウター",
-    "パンツ",
-    "シューズ",
-    "キャップ/ハット",
-    "アクセサリー",
-    "バッグ",
-    "レッグウェア",
-    "アンダーウェア",
-    "アイウェア",
-    "ファッション雑貨",
-    "スーツ/ネクタイ",
-    "財布/小物",
-    "時計",
-    "水着/着物・浴衣",
-    "その他"
-  ];
+  brand_options: Observable<Autocomplete[]>;
+  options: string[] = Options;
   color: string = 'accent';
   error_message: string = 'この入力は必須です';
   login: boolean = false;
   writable: boolean = false;
   sending: boolean = false;
+  categories = ["ブランド", "アイテム"];
 
   constructor(
     private session_service: SessionService,
@@ -67,6 +55,13 @@ export class RegisterComponent implements OnInit {
         this.uid = session.uid;
       }
     });
+
+    this.brand_options = this.register_form.get("brand")
+      .valueChanges
+      .pipe(
+        startWith(""),
+        map(term => this.data_service.filter_options("brand", term)),
+      );
   }
 
   brand_control(): AbstractControl {
@@ -121,13 +116,13 @@ export class RegisterComponent implements OnInit {
     }
 
     const data = this.create_data();
-    this.data_service.set_data_to_firestore(data);
+    await this.data_service.set_data_to_firestore(data);
     this.reset_form();
     this.sending = false;
   }
 
   create_data(): Data {
-    let image_path;
+    let image_path: string;
     if (this.register_form.get("image").value !== null) {
       image_path = this.file_path;
     } else {

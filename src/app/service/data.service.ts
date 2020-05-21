@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, BehaviorSubject, pipe, } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject, pipe } from 'rxjs';
 
 import { Data } from "../class-interface/data";
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
@@ -7,14 +7,19 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { map, take, switchMap, tap } from 'rxjs/operators';
 import { SessionService } from './session.service';
 import { Session } from '../class-interface/Session';
+import { Autocomplete } from "../class-interface/autocomplete";
+import { Options } from "../class-interface/item-categories";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  data: Data[];
-  cloth_subject = new BehaviorSubject<Data[]>(this.data);
   clothes: Observable<Data[]>;
+  brand_options: Autocomplete[] = [];
+  search_options: Autocomplete[] = [];
+  filtered_brand_options: Observable<Autocomplete[]>;
+  filtered_search_options: Observable<Autocomplete[]>;
+  search_options_subject = new Subject<Autocomplete[]>();
 
   result_subject = new Subject<Map<string, string>>();
   result: Map<string, string>;
@@ -30,34 +35,15 @@ export class DataService {
 
 
   get_data_from_firestore() {
-    if (this.uid.length < 1) {
-      this.session_service.session_state.subscribe((session: Session) => {
-        if (session.login) {
-          this.uid = session.uid;
-          this.get_data(session.uid);
-        }
-      });
-    } else {
-      this.get_data(this.uid);
-    }
-    // this.session_service.session_state.subscribe((session: Session) => {
-    //   if (session.login) {
-    //     this.session.uid = session.uid;
-    //     this.clothes = this.store
-    //       .collection("users")
-    //       .doc(session.uid)
-    //       .collection<Data>("clothes")
-    //       .valueChanges()
-    //       .pipe(
-    //         map(actions => {
-    //           return actions;
-    //         })
-    //       )
-    //   }
-    // });
+    this.session_service.session_state.subscribe((session: Session) => {
+      if (session.login) {
+        this.uid = session.uid;
+        this.get_cloth_data_list(session.uid);
+      }
+    });
   }
 
-  get_data(uid: string) {
+  get_cloth_data_list(uid: string) {
     this.clothes = this.store
       .collection("users")
       .doc(uid)
@@ -65,21 +51,20 @@ export class DataService {
       .snapshotChanges()
       .pipe(
         map(data_list => {
-          return this.set_data(data_list);
-        })
+          return this.create_cloth_data_list(data_list);
+        }),
+        tap(cloth_data => this.create_search_options_observable(cloth_data)),
+        tap(() => this.sort_autocomplete_options()),
+        tap(() => this.search_options_subject.next(this.search_options)),
+        // tap(() => this.create_search_options_observable()),
+        tap(() => console.count())
       )
-    // .valueChanges()
-    // .pipe(
-    //   map(data_list => {
-    //     return this.set_data(data_list);
-    //   })
-    // )
   }
 
-  set_data(data_list: DocumentChangeAction<Data>[]): Data[] {
+  create_cloth_data_list(data_list: DocumentChangeAction<Data>[]): Data[] {
     let clothes: Data[] = [];
 
-    data_list.map(data => {
+    data_list.forEach(data => {
       const cloth_data = data.payload.doc.data();
       const storage_rf = this.storage.ref(cloth_data["image"]);
       const download_url = storage_rf.getDownloadURL();
@@ -100,29 +85,120 @@ export class DataService {
     return clothes;
   }
 
-  // set_data(data_list: Data[]): Data[] {
-  //   let clothes: Data[] = [];
+  create_search_options_observable(cloth_data_list: Data[]) {
+    this.search_options = [];
+    this.brand_options = [];
+    this.search_options = this.create_search_options(cloth_data_list);
+  }
 
-  //   data_list.map(data => {
-  //     const storage_rf = this.storage.ref(data["image"]);
-  //     const download_url = storage_rf.getDownloadURL();
-  //     clothes.push(
-  //       {
-  //         brand: data.brand,
-  //         item_name: data.item_name,
-  //         item_category: data.item_category,
-  //         value: data.value,
-  //         image: data.image,
-  //         url: download_url
-  //       }
-  //     );
-  //   });
+  create_search_options(cloth_data_list: Data[]): Autocomplete[] {
+    let autocomplete_list: Autocomplete[] = [];
 
-  //   return clothes;
-  // }
+    cloth_data_list.forEach(cloth_data => {
+      let char: string;
+      if (this.check_ja(cloth_data.brand[0])) {
+        char = "その他";
+      } else {
+        char = cloth_data.brand[0].toUpperCase();
+      }
+      const brand_name = cloth_data.brand;
+      const item_category = cloth_data.item_category;
+
+      autocomplete_list = this.push_autocomplete(autocomplete_list, [char, "その他"], [brand_name, item_category], ["brands", "items"]);
+    });
+
+    return autocomplete_list;
+  }
+
+  push_autocomplete(autocomplete_list: Autocomplete[], chars: string[], names: string[], categories: string[]): Autocomplete[] {
+    chars.forEach((char, index) => {
+      const autocomplete = this.get_autocomplete(autocomplete_list, char);
+
+      if (autocomplete === void 0) {
+        autocomplete_list.push(this.create_autocomplete_object(char, names[index], categories[index]));
+      } else {
+        if (!this.check_name_existing(autocomplete, names[index], categories[index])) {
+          autocomplete.elements.push({ name: names[index], category: categories[index] });
+        }
+      }
+    });
+
+    return autocomplete_list;
+  }
+
+  get_autocomplete(autocomplete_list: Autocomplete[], char: string): Autocomplete {
+    return autocomplete_list.find(autocomplete => autocomplete.char === char);
+  }
+
+  check_name_existing(autocomplete: Autocomplete, name: string, category: string): boolean {
+    return (autocomplete.elements.find(auto => auto.name === name && auto.category === category) === void 0) ? false : true;
+  }
+
+  create_autocomplete_object(char: string, name: string, category: string): Autocomplete {
+    return {
+      char: char,
+      elements: [{
+        name: name,
+        category: category,
+      }]
+    };
+  }
+
+  sort_autocomplete_options() {
+    this.search_options.sort((a, b) => {
+      if (a.char < b.char) return -1;
+      if (a.char > b.char) return 1;
+    });
+    this.search_options.forEach(option => {
+      option.elements.sort((a, b) => {
+        if (a.category < b.category) return -1;
+        if (a.category > b.category) return 1;
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+      });
+      if (option.elements.find(element => element.category === "brands") !== void 0) {
+        this.brand_options.push(option);
+      }
+    });
+  }
+
+  get_search_options_subject(): Observable<Autocomplete[]> {
+    return this.search_options_subject;
+  }
+
+  filter_options(type: string, term: string): Autocomplete[] {
+    let options: Autocomplete[];
+    if (type === "brand") {
+      options = this.brand_options;
+    }
+    if (type === "search") {
+      options = this.search_options;
+    }
+
+    if (term) {
+      return options
+        .map(autocomplete => {
+          return {
+            char: autocomplete.char,
+            elements: this.filter_element_names(autocomplete.elements, term)
+          }
+        })
+        .filter(autocomplete => autocomplete.elements.length > 0)
+    }
+
+    return options;
+  }
+
+  filter_element_names(element: { name: string, category: string }[], term: string): { name: string, category: string }[] {
+    if (this.check_ja(term)) {
+      return element.filter(object => !this.to_kana(object.name).indexOf(this.to_kana(term)))
+    } else {
+      return element.filter(object => !object.name.toUpperCase().indexOf(term.toUpperCase()))
+    }
+  }
 
   set_data_to_firestore(cloth_data: Data) {
-    this.store
+    return this.store
       .collection("users")
       .doc(this.uid)
       .collection<Data>("clothes")
@@ -130,23 +206,7 @@ export class DataService {
   }
 
   get_cloth_data(): Observable<Data[]> {
-    // console.log(this.clothes);
-    // this.cloth_subject.next(this.data);
     return this.clothes;
-    // return new Observable((observer => {
-    //   observer.next(this.data);
-    // }));
-    // return of(this.data);
-    // return of(DATA);
-  }
-
-  get_clothes_length(): Observable<number> {
-    return this.clothes
-      .pipe(
-        map(data => {
-          return data.length
-        })
-      );
   }
 
   delete_data_from_firestore(doc_key: string, image_path: string) {
@@ -157,45 +217,10 @@ export class DataService {
       .doc(doc_key)
       .delete();
 
-
     if ("no_image.png" !== image_path) {
       const storage_rf = this.storage.ref(image_path);
       storage_rf.delete();
     }
-  }
-
-  search_data(term: string): Observable<Map<string, string>> {
-    if (!term.trim()) {
-      return of();
-    }
-    this.result = new Map<string, string>();
-
-    this.clothes.subscribe(data_list => {
-      data_list.forEach(data => {
-        this.search_property.forEach(property => {
-          let target = data[property];
-          if (this.check_ja(term)) {
-            // if (this.to_kana(target).includes(this.to_kana(term))) {
-            if (!this.to_kana(target).indexOf(this.to_kana(term))) {
-              if (!this.result.has(target)) {
-                this.result.set(target, property);
-              }
-            }
-          } else {
-            // if (target.toUpperCase().includes(term.toUpperCase())) {
-            if (!target.toUpperCase().indexOf(term.toUpperCase())) {
-              if (!this.result.has(target)) {
-                this.result.set(target, property);
-              }
-            }
-          }
-        })
-      });
-      this.result_subject.next(this.result);
-    })
-
-
-    return this.result_subject.pipe(take(1));
   }
 
   check_ja(str: string): boolean {

@@ -1,11 +1,3 @@
-<div *ngIf="number_of_data===0">
-    <app-no-data></app-no-data>
-</div>
-
-<div *ngIf="number_of_data>0">
-    <div class="brands" *ngFor="let title of titles; let i = index">
-        <app-draw-graph [title]="title" [category]="category" [content]="contents[i]" [display_number]="display_number"
-            [show_others]="show_others">
-        </app-draw-graph>
-    </div>
-</div>
+<app-draw-graph [titles]="titles" [categories]="categories" [contents]="contents" [display_number]="display_number"
+    [show_others]="show_others">
+</app-draw-graph>

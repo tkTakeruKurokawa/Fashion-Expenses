@@ -1,8 +1,6 @@
-<div *ngIf="number_of_data===0">
-    <app-no-data></app-no-data>
-</div>
+<!-- <app-brands [display_number]="5" [show_others]="false"></app-brands>
+<app-items [display_number]="5" [show_others]="false"></app-items> -->
 
-<div *ngIf="number_of_data > 0">
-    <app-brands [display_number]="5" [show_others]="false"></app-brands>
-    <app-items [display_number]="5" [show_others]="false"></app-items>
-</div>
+<app-draw-graph [titles]="titles" [categories]="categories" [contents]="contents" [display_number]="display_number"
+    [show_others]="show_others">
+</app-draw-graph>

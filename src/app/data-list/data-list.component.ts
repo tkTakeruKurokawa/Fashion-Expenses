@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -8,10 +9,11 @@ import { DataService } from '../service/data.service';
   templateUrl: './data-list.component.html',
   styleUrls: ['./data-list.component.scss']
 })
-export class DataListComponent implements OnInit {
+export class DataListComponent implements OnInit, OnDestroy {
   cloth_data: Data[];
 
   number_of_data: number;
+  subscription: Subscription;
 
   constructor(
     private data_service: DataService
@@ -22,7 +24,7 @@ export class DataListComponent implements OnInit {
   }
 
   get_cloth_list() {
-    this.data_service.get_cloth_data()
+    this.subscription = this.data_service.get_cloth_data()
       .subscribe(cloth_list => {
         this.cloth_data = cloth_list
         this.number_of_data = this.cloth_data.length;
@@ -35,5 +37,9 @@ export class DataListComponent implements OnInit {
 
   delete_this_data(doc_key: string, image_path: string) {
     this.data_service.delete_data_from_firestore(doc_key, image_path);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

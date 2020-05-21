@@ -12,7 +12,16 @@
             <form class="form" [formGroup]="register_form" (ngSubmit)="register()">
                 <mat-form-field appearance="outline" [color]="color" class="element">
                     <mat-label>ブランド名</mat-label>
-                    <input matInput id="brand" class="input" formControlName="brand" placeholder="ユニクロ" required>
+                    <input matInput [matAutocomplete]="autocomplete" id="brand" class="input" formControlName="brand"
+                        placeholder="ユニクロ" required>
+                    <mat-autocomplete #autocomplete="matAutocomplete">
+                        <mat-optgroup *ngFor="let brand of brand_options | async" [label]="brand.char">
+                            <mat-option *ngFor="let element of brand.elements" [value]="element.name">
+                                {{element.name}}
+                            </mat-option>
+                        </mat-optgroup>
+
+                    </mat-autocomplete>
                     <mat-error *ngIf="brand_control().invalid">{{error_message}}</mat-error>
                     <mat-hint>
                         ブランド名は統一して登録してください<br>
