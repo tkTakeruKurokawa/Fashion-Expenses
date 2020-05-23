@@ -37,6 +37,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   reset_term() {
+    this.search.reset();
     setTimeout(() => this.input.nativeElement.blur());
   }
 
