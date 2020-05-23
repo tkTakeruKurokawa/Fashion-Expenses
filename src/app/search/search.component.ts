@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, Inject } from '@angular/core';
 import { Observable, Subject, pipe, Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap, startWith, map } from "rxjs/operators";
 import { Data } from "../class-interface/data";
@@ -16,8 +16,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   search_options: Observable<Autocomplete[]>;
   subscription: Subscription;
 
+  @ViewChild('input', { static: false }) input: ElementRef;
+
   constructor(
-    private data_service: DataService
+    private data_service: DataService,
   ) { }
 
   ngOnInit() {
@@ -32,6 +34,10 @@ export class SearchComponent implements OnInit, OnDestroy {
             map(term => this.data_service.filter_options("search", term)),
           );
       });
+  }
+
+  reset_term() {
+    setTimeout(() => this.input.nativeElement.blur());
   }
 
   ngOnDestroy() {

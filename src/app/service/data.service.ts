@@ -195,9 +195,9 @@ export class DataService {
 
   filter_element_names(element: { name: string, category: string }[], term: string): { name: string, category: string }[] {
     if (this.check_ja(term)) {
-      return element.filter(object => !this.to_kana(object.name).indexOf(this.to_kana(term)))
+      return element.filter(object => this.to_kana(object.name).indexOf(this.to_kana(term)) > -1)
     } else {
-      return element.filter(object => !object.name.toUpperCase().indexOf(term.toUpperCase()))
+      return element.filter(object => object.name.toUpperCase().indexOf(term.toUpperCase()) > -1)
     }
   }
 
