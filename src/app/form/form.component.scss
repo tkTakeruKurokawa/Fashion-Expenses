@@ -1,0 +1,68 @@
+.register {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow: auto;
+  z-index: 20;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  background-color: white;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 50%;
+    margin: 0 auto;
+
+    .brand_forms {
+      // width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      // align-items: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+
+      .brand_form {
+        width: 68%;
+      }
+
+      .brand_button {
+        height: 55px;
+        width: 30%;
+        margin-top: 4px;
+        font-size: 10px;
+      }
+    }
+
+    .element {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .image {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+
+      .image_icon {
+        background-color: white;
+        border-radius: 5px;
+        height: 50px;
+      }
+    }
+
+    .button {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 100px;
+    }
+  }
+}

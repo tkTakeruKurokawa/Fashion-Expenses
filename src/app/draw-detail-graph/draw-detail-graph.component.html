@@ -17,8 +17,7 @@
                 <h3>合計消費額：<span class="total-value">{{detail.total[0] | currency:'JPY'}}</span></h3>
 
                 <canvas baseChart [datasets]="detail.bar_value_data" [labels]="detail.bar_value_name"
-                    [colors]="detail.bar_colors" [options]="detail.bar_options" [legend]="detail.bar_legend"
-                    [chartType]="detail.bar_type">
+                    [options]="detail.bar_options" [legend]="detail.bar_legend" [chartType]="detail.bar_type">
                 </canvas>
             </div>
 
@@ -28,8 +27,7 @@
                 <h3>合計所有数：<span class="total-number">{{detail.total[1] | number}}個</span></h3>
 
                 <canvas baseChart [datasets]="detail.bar_number_data" [labels]="detail.bar_number_name"
-                    [colors]="detail.bar_colors" [options]="detail.bar_options" [legend]="detail.bar_legend"
-                    [chartType]="detail.bar_type">
+                    [options]="detail.bar_options" [legend]="detail.bar_legend" [chartType]="detail.bar_type">
                 </canvas>
             </div>
         </div>

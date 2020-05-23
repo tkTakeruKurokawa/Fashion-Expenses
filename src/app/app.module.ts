@@ -37,6 +37,8 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { FormComponent } from './form/form.component';
+import { RangePipe } from './pipe/range.pipe';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { NoDataComponent } from './no-data/no-data.component';
     SignInComponent,
     NotFoundComponent,
     NoDataComponent,
+    FormComponent,
+    RangePipe,
   ],
   imports: [
     BrowserModule,
