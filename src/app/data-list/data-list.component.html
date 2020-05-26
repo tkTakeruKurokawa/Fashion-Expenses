@@ -25,3 +25,7 @@
         </mat-card>
     </div>
 </div>
+
+<div *ngIf="writable">
+    <app-form (event)="close_edit()" [data]="data"></app-form>
+</div>

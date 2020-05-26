@@ -36,7 +36,7 @@ export class DataService {
 
   get_data_from_firestore() {
     this.session_service.session_state.subscribe((session: Session) => {
-      if (session.login) {
+      if (session) {
         this.uid = session.uid;
         this.get_cloth_data_list(session.uid);
       }
@@ -201,12 +201,21 @@ export class DataService {
     }
   }
 
-  set_data_to_firestore(cloth_data: Data) {
+  set_new_data_to_firestore(cloth_data: Data) {
     return this.store
       .collection("users")
       .doc(this.uid)
       .collection<Data>("clothes")
       .add(cloth_data);
+  }
+
+  set_edit_data_to_firestore(cloth_data: Data, doc_key: string) {
+    return this.store
+      .collection("users")
+      .doc(this.uid)
+      .collection<Data>("clothes")
+      .doc(doc_key)
+      .set(cloth_data);
   }
 
   get_cloth_data(): Observable<Data[]> {
