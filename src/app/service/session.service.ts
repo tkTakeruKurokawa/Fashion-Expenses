@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
 import { switchMap, map, timeout } from 'rxjs/operators';
 
 import { Session } from "../class-interface/Session";
@@ -14,7 +14,7 @@ import { resolve } from 'url';
 })
 export class SessionService {
   public session = new Session();
-  public session_subject = new Subject<Session>();
+  public session_subject = new BehaviorSubject<Session>(null);
   public session_state = this.session_subject.asObservable();
 
   constructor(

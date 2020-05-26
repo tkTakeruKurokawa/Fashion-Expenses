@@ -10,10 +10,12 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./data-list.component.scss']
 })
 export class DataListComponent implements OnInit, OnDestroy {
+  data: Data;
   cloth_data: Data[];
+  subscription: Subscription;
 
   number_of_data: number;
-  subscription: Subscription;
+  writable: boolean = false;
 
   constructor(
     private data_service: DataService
@@ -32,7 +34,12 @@ export class DataListComponent implements OnInit, OnDestroy {
   }
 
   edit_this_data(cloth_data: Data) {
-    console.log(cloth_data);
+    this.writable = true;
+    this.data = cloth_data;
+  }
+
+  close_edit(event_data: boolean) {
+    this.writable = event_data;
   }
 
   delete_this_data(doc_key: string, image_path: string) {

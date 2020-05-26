@@ -32,7 +32,7 @@
         width: 68%;
       }
 
-      .brand_button {
+      .brand_buttons {
         height: 55px;
         width: 30%;
         margin-top: 4px;
@@ -46,19 +46,30 @@
       width: 100%;
     }
 
-    .image {
+    .image_buttons {
       display: flex;
-      flex-direction: column;
-      text-align: left;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
 
-      .image_icon {
-        background-color: white;
-        border-radius: 5px;
+      button {
         height: 50px;
+        width: 45%;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-size: medium;
       }
     }
 
-    .button {
+    .image {
+      border: solid;
+      height: 300px;
+      width: 100%;
+      object-fit: contain;
+      background-color: rgba(82, 82, 82, 0.26);
+    }
+
+    .bottom_buttons {
       display: flex;
       flex-direction: row;
       justify-content: space-between;

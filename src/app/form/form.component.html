@@ -1,5 +1,6 @@
 <div class="register">
-    <h1>アイテムを登録</h1>
+    <h1 *ngIf="!is_data_existing()">アイテムを登録</h1>
+    <h1 *ngIf="is_data_existing()">アイテムを編集</h1>
 
     <form class="form" [formGroup]="register_form" (ngSubmit)="register()">
 
@@ -23,9 +24,9 @@
                     </mat-hint> -->
                 </mat-form-field>
                 <button *ngIf="i === 0" mat-raised-button color="accent" type="button" (click)="increase_brand()"
-                    class="brand_button">コラボブランドを追加</button>
+                    class="brand_buttons">コラボブランドを追加</button>
                 <button *ngIf="i > 0" mat-raised-button type="button" (click)="decrease_brand(i)"
-                    class="brand_button">コラボブランドを削除</button>
+                    class="brand_buttons">コラボブランドを削除</button>
             </div>
         </div>
 
@@ -50,22 +51,30 @@
             <mat-error *ngIf="value_control().invalid">{{error_message}}</mat-error>
         </mat-form-field>
 
-        <div class="element image">
-            <span>写真を追加（任意）</span>
-            <span *ngIf="file_name.length">アップロードされる画像：{{file_name}}</span>
+        <div class="element">
+            <span>写真（任意）</span>
             <input hidden #file_upload type="file" accept="image/*" formControlName="image"
                 (change)="set_image_data($event)">
-            <button (click)="file_upload.click()" type="button" class="image_icon">
-                <mat-icon>add_photo_alternate</mat-icon>
-            </button>
+            <div class="image_buttons">
+                <button mat-raised-button type="button" color="accent" *ngIf="!image_url"
+                    (click)="file_upload.click()">写真を追加</button>
+                <button mat-raised-button type="button" color="accent" *ngIf="image_url"
+                    (click)="file_upload.click()">写真を変更</button>
+                <button mat-raised-button type="button" *ngIf="image_url" (click)="remove_image_data()"
+                    (click)="file_upload.value = ''">写真を削除</button>
+            </div>
+            <!-- <span *ngIf="file_exist">アップロードされる画像：{{file_name}}</span> -->
+            <img *ngIf="image_url" class="image" [src]="image_url">
         </div>
 
-        <div class="element button">
+        <div class="element bottom_buttons">
             <button mat-raised-button type="reset" (click)="cancel()">キャンセル</button>
-            <button mat-raised-button [disabled]="is_invalid()" color="accent" type="submit"
-                class="submit_button">登録する</button>
-            <button mat-raised-button [disabled]="is_invalid()" color="accent" type="button"
+            <button mat-raised-button *ngIf="!is_data_existing()" [disabled]="is_invalid()" type="submit"
+                color="accent">登録する</button>
+            <button mat-raised-button *ngIf="!is_data_existing()" [disabled]="is_invalid()" type="button" color="accent"
                 (click)="continue_register()">登録して続ける</button>
+            <button mat-raised-button *ngIf="is_data_existing()" [disabled]="is_invalid()" type="button" color="accent"
+                (click)="edit()">変更する</button>
         </div>
     </form>
 </div>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SessionService } from '../service/session.service';
 import { Session } from '../class-interface/Session';
 import { DataService } from '../service/data.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -9,8 +10,9 @@ import { DataService } from '../service/data.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   login: boolean = false;
+  subscription: Subscription;
 
   constructor(
     private session_service: SessionService,
@@ -18,12 +20,16 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.session_service.session_state.subscribe((session: Session) => {
+    this.subscription = this.session_service.session_state.subscribe((session: Session) => {
       if (session) {
         this.login = session.login;
         // this.data_service.get_data_from_firestore(session.uid);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   sign_out() {
