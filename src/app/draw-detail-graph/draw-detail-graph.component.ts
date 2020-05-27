@@ -3,7 +3,7 @@ import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 class Detail {
   title: string;
@@ -224,6 +224,10 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
   sort_ranking() {
     this.quick_sort("value", 0, this.detail.bar_value.length - 1);
     this.quick_sort("number", 0, this.detail.bar_number.length - 1);
+  }
+
+  is_observable(url: string | Observable<string>): boolean {
+    return (typeof url === "string" ? false : true);
   }
 
   ngOnDestroy() {

@@ -2,6 +2,7 @@
   width: 100%;
   background-color: white;
   text-align: center;
+  overflow-wrap: break-word;
 
   .title {
     padding: 20px 0;
@@ -44,7 +45,6 @@
       justify-content: space-around;
       width: 100%;
       text-align: center;
-      overflow-wrap: break-word;
 
       .card {
         display: -webkit-flex;

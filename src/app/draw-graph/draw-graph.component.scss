@@ -55,11 +55,12 @@ $color: #00e600;
       padding-right: 5px;
 
       .rank {
-        display: inline-block;
+        display: block;
         background-color: $color;
         color: black;
         margin: 0 0;
         padding: 10px 10px;
+        width: 10%;
         // height: 100%;
         // width: 40px;
 
@@ -79,6 +80,7 @@ $color: #00e600;
         color: $color;
         font-size: larger;
         overflow-wrap: break-word;
+        width: 60%;
 
         &_1 {
           font-weight: 900;
@@ -93,6 +95,7 @@ $color: #00e600;
       .value {
         display: block;
         color: red;
+        width: 30%;
       }
     }
     mat-expansion-panel {

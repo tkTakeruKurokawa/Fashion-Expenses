@@ -3,8 +3,10 @@
     <mat-autocomplete #autocomplete="matAutocomplete">
         <mat-optgroup *ngFor="let search of search_options | async" [label]="search.char">
             <mat-option *ngFor="let element of search.elements" id="option">
-                <a class="element" [routerLink]="['/' + element.category, element.name | escape]"
-                    (click)="reset_term()">{{ element.name }}</a>
+                <div class="name">
+                    <a class="element" [routerLink]="['/' + element.category, element.name | escape]"
+                        (click)="reset_term()">{{ element.name }}</a>
+                </div>
             </mat-option>
         </mat-optgroup>
     </mat-autocomplete>

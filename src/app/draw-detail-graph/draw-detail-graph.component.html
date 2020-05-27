@@ -45,7 +45,10 @@
                             <span>{{data.brand}}</span>
                         </mat-card-subtitle>
                     </mat-card-header>
-                    <img mat-card-image class="image" src="{{data.url | async}}" alt="{{data.item_name}}'s details">
+                    <img mat-card-image *ngIf="is_observable(data.url)" class="image" src="{{data.url | async}}"
+                        alt="{{data.item_name}}'s details">
+                    <img mat-card-image *ngIf="!is_observable(data.url)" class="image" src="{{data.url}}"
+                        alt="{{data.item_name}}'s details">
                     <mat-card-content>
                         <p>{{data.item_category}}</p>
                         <p>{{data.value | currency:'JPY'}}</p>

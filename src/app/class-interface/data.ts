@@ -7,6 +7,6 @@ export interface Data {
     item_category: string;
     value: number;
     image: string;
-    url?: Observable<string>;
+    url?: string | Observable<string>;
     doc_key?: string;
 }

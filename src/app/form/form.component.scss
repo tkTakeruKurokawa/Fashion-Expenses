@@ -46,6 +46,11 @@
       width: 100%;
     }
 
+    .image_error {
+      color: red;
+      font-weight: bold;
+    }
+
     .image_buttons {
       display: flex;
       flex-direction: row;

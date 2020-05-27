@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 
 @Component({
@@ -31,6 +31,10 @@ export class DataListComponent implements OnInit, OnDestroy {
         this.cloth_data = cloth_list
         this.number_of_data = this.cloth_data.length;
       });
+  }
+
+  is_observable(url: string | Observable<string>): boolean {
+    return (typeof url === "string" ? false : true);
   }
 
   edit_this_data(cloth_data: Data) {

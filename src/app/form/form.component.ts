@@ -24,8 +24,10 @@ export class FormComponent implements OnInit, OnDestroy {
   file_exist: boolean = false;
   file_name: string = "";
   file_path: string = "";
+  file_size: number = 0;
   file_reader = new FileReader();
   image_url: string = "";
+  no_image_path: string = "../../assets/no_image.png";
   uid: string = "";
   subscriptions: Subscription[] = [];
 
@@ -33,7 +35,8 @@ export class FormComponent implements OnInit, OnDestroy {
   options: string[] = Options;
   color: string = 'accent';
 
-  error_message: string = 'この入力は必須です';
+  required_error: string = 'この入力は必須です';
+  max_text_error: string = '最大文字数は 100文字 です';
   sending: boolean = false;
   brand_count: number = 1;
 
@@ -49,14 +52,14 @@ export class FormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.register_form = this.fb.group({
-      brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required]],
-      item_name: [this.is_data_existing() ? this.data.item_name : null, [Validators.required]],
+      brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required, max_text_validator]],
+      item_name: [this.is_data_existing() ? this.data.item_name : null, [Validators.required, max_text_validator]],
       item_category: [this.is_data_existing() ? this.data.item_category : null, [Validators.required]],
-      value: [this.is_data_existing() ? this.data.value : null, [Validators.required]],
+      value: [this.is_data_existing() ? this.data.value : null, [Validators.required, max_value_validator]],
       image: [null],
     });
     if (this.is_data_existing()) {
-      if (this.data.image !== "no_image.png") {
+      if (this.data.image !== this.no_image_path) {
         this.subscriptions.push(
           this.afs.ref(this.data.image).getDownloadURL().subscribe(image => {
             this.image_url = image;
@@ -64,7 +67,6 @@ export class FormComponent implements OnInit, OnDestroy {
         );
       }
     }
-
 
     this.activate_filter(0);
 
@@ -95,6 +97,15 @@ export class FormComponent implements OnInit, OnDestroy {
     return this.register_form.get('item_name');
   }
 
+  get_text_error_message(key: string): string {
+    if (this.register_form.get(key).hasError("required")) {
+      return this.required_error;
+    }
+    if (this.register_form.get(key).hasError("max_text_validator")) {
+      return this.max_text_error;
+    }
+  }
+
   item_category_control(): AbstractControl {
     return this.register_form.get('item_category');
   }
@@ -103,13 +114,22 @@ export class FormComponent implements OnInit, OnDestroy {
     return this.register_form.get('value');
   }
 
+  get_value_error_message(): string {
+    if (this.register_form.get("value").hasError("required")) {
+      return this.required_error;
+    }
+    if (this.register_form.get("value").hasError("max_value_validator")) {
+      return "最大入力価格は 9,999,999,999,999円 です";
+    }
+  }
+
   existing_form(index: number) {
     return this.register_form.contains("brand" + index);
   }
 
   increase_brand() {
     this.brand_count++;
-    this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required]));
+    this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required, max_text_validator]));
     this.activate_filter(this.brand_count - 1);
   }
 
@@ -118,24 +138,21 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   is_invalid(): boolean {
-    return (this.register_form.invalid || this.sending);
+    return (this.register_form.invalid || (this.file_size > 5000000) || this.sending);
   }
 
   set_image_data(event) {
-    // console.log(event);
-
     if (event.target.files.length > 0) {
       this.file = event.target.files[0];
       this.file_exist = true;
       this.file_name = this.file["name"];
       this.file_path = "users/" + this.uid + "/" + moment().format() + "_" + this.file_name;
+      this.file_size = this.file.size;
       this.file_reader.onload = (e) => {
         this.image_url = e.target["result"] as string;
       };
       this.file_reader.readAsDataURL(this.file);
-      // console.log(this.file_reader);
     }
-
     console.log(this.file, this.file_path);
   }
 
@@ -144,6 +161,7 @@ export class FormComponent implements OnInit, OnDestroy {
     this.file_exist = false;
     this.file_name = "";
     this.file_path = "";
+    this.file_size = 0;
     this.image_url = "";
   }
 
@@ -191,9 +209,8 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   async submit_edit_data() {
-    // console.log(this.register_form);
     if (this.register_form.get("image").value !== null) {
-      if (this.data.image !== "no_image.png") {
+      if (this.data.image !== this.no_image_path) {
         this.afs.ref(this.data.image).delete();
       }
       const storage_ref = this.afs.ref(this.file_path);
@@ -202,7 +219,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     } else {
       if (!this.image_url) {
-        if (this.data.image !== "no_image.png") {
+        if (this.data.image !== this.no_image_path) {
           this.afs.ref(this.data.image).delete();
         }
       }
@@ -214,6 +231,20 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   create_data(): Data {
+    const brand = this.create_brand_name();
+    const image_path = this.create_image_path();
+
+    const data: Data = {
+      brand: brand,
+      item_name: this.register_form.get("item_name").value,
+      item_category: this.register_form.get("item_category").value,
+      value: this.register_form.get("value").value,
+      image: image_path
+    };
+    return data;
+  }
+
+  create_brand_name(): string {
     let brand = "";
     let count = 0;
     for (let index = 0; index < this.brand_count; index++) {
@@ -227,32 +258,39 @@ export class FormComponent implements OnInit, OnDestroy {
       }
     }
 
-    let image_path: string;
+    return brand;
+  }
+
+  create_image_path(): string {
     if (this.register_form.get("image").value !== null) {
-      image_path = this.file_path;
+      return this.file_path;
     } else {
       if (this.is_data_existing()) {
         if (this.image_url) {
-          image_path = this.data.image;
+          return this.data.image;
         } else {
-          image_path = "no_image.png";
+          return this.no_image_path;
         }
       }
-      image_path = "no_image.png";
+      return this.no_image_path;
     }
-
-    const data: Data = {
-      brand: brand,
-      item_name: this.register_form.get("item_name").value,
-      item_category: this.register_form.get("item_category").value,
-      value: this.register_form.get("value").value,
-      image: image_path
-    };
-    return data;
   }
 
   reset_form() {
     this.register_form.reset();
     this.remove_image_data()
+  }
+}
+
+function max_value_validator(form_control: AbstractControl) {
+  return (form_control.value >= 10000000000000) ? { max_value_validator: true } : null;
+}
+
+function max_text_validator(form_control: AbstractControl) {
+  const text: string = form_control.value;
+  if (text) {
+    return (form_control.value.length > 100) ? { max_text_validator: true } : null;
+  } else {
+    return null;
   }
 }

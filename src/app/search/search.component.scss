@@ -3,11 +3,18 @@ mat-form-field {
 }
 
 #option {
-  padding: 0px 0px;
+  height: auto;
+  padding: 0 0;
+  white-space: unset;
+  line-height: unset;
+  overflow-wrap: break-word;
 
   .element {
     display: block;
     color: #00e600;
+    width: 138px;
     padding-left: 32px;
+    padding-right: 10px;
+    margin: 10px 0;
   }
 }

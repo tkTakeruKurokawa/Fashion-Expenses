@@ -66,8 +66,13 @@ export class DataService {
 
     data_list.forEach(data => {
       const cloth_data = data.payload.doc.data();
-      const storage_rf = this.storage.ref(cloth_data["image"]);
-      const download_url = storage_rf.getDownloadURL();
+      let url: string | Observable<string>;
+      if (cloth_data["image"] === "../../assets/no_image.png") {
+        url = cloth_data["image"];
+      } else {
+        const storage_rf = this.storage.ref(cloth_data["image"]);
+        url = storage_rf.getDownloadURL();
+      }
 
       clothes.push(
         {
@@ -76,7 +81,7 @@ export class DataService {
           item_category: cloth_data.item_category,
           value: cloth_data.value,
           image: cloth_data.image,
-          url: download_url,
+          url: url,
           doc_key: data.payload.doc.id
         }
       );

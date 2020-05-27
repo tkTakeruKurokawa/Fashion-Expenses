@@ -17,8 +17,8 @@
                             </mat-option>
                         </mat-optgroup>
                     </mat-autocomplete>
-                    <!-- <mat-error *ngIf="brand_control(i).invalid">{{error_message}}</mat-error>
-                        <mat-hint>
+                    <mat-error *ngIf="brand_control(i).invalid">{{get_text_error_message('brand' + i )}}</mat-error>
+                    <!-- <mat-hint>
                         ブランド名は統一して登録してください<br>
                         一文字でも異なると違うブランドとして認識されます
                     </mat-hint> -->
@@ -34,7 +34,7 @@
             <mat-label>アイテム名</mat-label>
             <input matInput id="item_name" class="input" formControlName="item_name" placeholder="オーバーサイズクルーネックT"
                 required>
-            <mat-error *ngIf="item_name_control().invalid">{{error_message}}</mat-error>
+            <mat-error *ngIf="item_name_control().invalid">{{get_text_error_message('item_name')}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" [color]="color" class="element">
@@ -42,20 +42,21 @@
             <mat-select id="item_category" class="input" formControlName="item_category" required>
                 <mat-option *ngFor="let option of options" value="{{option}}">{{option}}</mat-option>
             </mat-select>
-            <mat-error *ngIf="item_category_control().invalid">{{error_message}}</mat-error>
+            <mat-error *ngIf="item_category_control().invalid">{{required_error}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" [color]="color" class="element">
             <mat-label>価格</mat-label>
-            <input matInput id="value" type="number" class="input" formControlName="value" placeholder="10000" required>
-            <mat-error *ngIf="value_control().invalid">{{error_message}}</mat-error>
+            <input matInput id="value" type="number" class="input" formControlName="value" placeholder="3000" required>
+            <mat-error *ngIf="value_control().invalid">{{get_value_error_message()}}</mat-error>
         </mat-form-field>
 
         <div class="element">
-            <span>写真（任意）</span>
+            <span>写真（5MB以下，任意）<br></span>
+            <span *ngIf="file_size > 5000000" class="image_error">ファイルサイズが5MBを超えています</span>
             <input hidden #file_upload type="file" accept="image/*" formControlName="image"
                 (change)="set_image_data($event)">
-            <div class="image_buttons">
+            <div class=" image_buttons">
                 <button mat-raised-button type="button" color="accent" *ngIf="!image_url"
                     (click)="file_upload.click()">写真を追加</button>
                 <button mat-raised-button type="button" color="accent" *ngIf="image_url"
