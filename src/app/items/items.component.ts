@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-items',
@@ -6,8 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./items.component.scss']
 })
 export class ItemsComponent implements OnInit {
-  @Input() display_number: number = 5;
-  @Input() show_others: boolean = true;
+  display_number: number = 3;
+  show_others: boolean = true;
 
   titles: string[] = ["アイテムカテゴリごとの消費額", "アイテムカテゴリごとの所持数"];
   categories: string[] = ["item_category", "item_category"];

@@ -22,20 +22,26 @@
                             *ngIf="contents[first_index] === 'value'; else number">{{draw_graph.total[first_index] | currency:'JPY'}}</span>
                         <ng-template #number>{{draw_graph.total[first_index] | number}}個</ng-template>
                     </div>
+
                     <div *ngFor="let name of draw_graph.names[first_index]; let second_index = index">
                         <div *ngIf="second_index < display_number" class="data data_{{second_index+1}}">
-                            <div class="rank rank_{{second_index+1}}">
-                                {{second_index+1}}
+                            <div class="rank">
+                                <div class="rank_{{second_index+1}}">
+                                    {{second_index+1}}
+                                </div>
                             </div>
-                            <a [routerLink]="['/' + draw_graph.url_categories[first_index], name | escape]"
-                                class="name name_{{second_index+1}}">
-                                {{name}}
-                            </a>
-                            <div class="value value_{{second_index+1}}">
-                                <span
-                                    *ngIf="contents[first_index] === 'value' ; else top_value">{{draw_graph.values[first_index][second_index] | currency:'JPY'}}</span>
-                                <ng-template #top_value>{{draw_graph.values[first_index][second_index] | number}}個
-                                </ng-template>
+
+                            <div class="name_and_value">
+                                <a [routerLink]="['/' + draw_graph.url_categories[first_index], name | escape]"
+                                    class="name name_{{second_index+1}}">
+                                    {{name}}
+                                </a>
+                                <div class="value">
+                                    <span
+                                        *ngIf="contents[first_index] === 'value' ; else top_value">{{draw_graph.values[first_index][second_index] | currency:'JPY'}}</span>
+                                    <ng-template #top_value>{{draw_graph.values[first_index][second_index] | number}}個
+                                    </ng-template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -52,16 +58,18 @@
                                 <div class="rank">
                                     {{third_index+1}}
                                 </div>
-                                <a [routerLink]="['/' + draw_graph.url_categories[first_index], name | escape]"
-                                    class="name">
-                                    {{name}}
-                                </a>
-                                <div class="value">
-                                    <span
-                                        *ngIf="contents[first_index] === 'value'; else others_value">{{draw_graph.values[first_index][third_index] | currency:'JPY'}}</span>
-                                    <ng-template #others_value>
-                                        {{draw_graph.values[first_index][third_index] | number}}個
-                                    </ng-template>
+                                <div class="name_and_value">
+                                    <a [routerLink]="['/' + draw_graph.url_categories[first_index], name | escape]"
+                                        class="name">
+                                        {{name}}
+                                    </a>
+                                    <div class="value">
+                                        <span
+                                            *ngIf="contents[first_index] === 'value'; else others_value">{{draw_graph.values[first_index][third_index] | currency:'JPY'}}</span>
+                                        <ng-template #others_value>
+                                            {{draw_graph.values[first_index][third_index] | number}}個
+                                        </ng-template>
+                                    </div>
                                 </div>
                             </div>
                         </div>

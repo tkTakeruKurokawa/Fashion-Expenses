@@ -1,4 +1,5 @@
-$color: #00e600;
+$accent: #00e600;
+$colors: rgb(255, 217, 0), rgb(221, 221, 221), rgb(212, 137, 39);
 
 .title_width {
   width: 100%;
@@ -14,7 +15,8 @@ $color: #00e600;
   display: -webkit-flex;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: center;
   height: 100%;
   width: 100%;
   padding-bottom: 10px;
@@ -24,9 +26,9 @@ $color: #00e600;
     height: 100%;
     width: 50%;
     top: 20%;
-    // canvas {
-    // }
+    min-width: 300px;
   }
+
   .list {
     height: 100%;
     width: 45%;
@@ -39,68 +41,71 @@ $color: #00e600;
       width: 100%;
       margin: 0 auto;
     }
+
     .data {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
       align-items: center;
       justify-content: space-between;
-      font-size: medium;
-      font-weight: 600;
+      margin: 10px auto;
       background-color: #fff8e198;
       box-shadow: 2px 2px 4px rgb(158, 158, 158);
-      height: 100%;
       width: 100%;
-      margin: 10px auto;
-      padding-right: 5px;
 
       .rank {
         display: block;
-        background-color: $color;
+        background-color: $accent;
         color: black;
-        margin: 0 0;
-        padding: 10px 10px;
-        width: 10%;
-        // height: 100%;
-        // width: 40px;
+        font-weight: 500;
+        height: 50px;
+        line-height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        margin: 3px 0;
 
-        // &_1 {
-        //   color: rgb(255, 217, 0);
-        // }
-        // &_2 {
-        //   color: rgb(221, 221, 221);
-        // }
-        // &_3 {
-        //   color: rgb(212, 137, 39);
-        // }
-      }
-      .name {
-        display: block;
-        margin: 0 5px;
-        color: $color;
-        font-size: larger;
-        overflow-wrap: break-word;
-        width: 60%;
-
-        &_1 {
-          font-weight: 900;
-        }
-        &_2 {
-          font-weight: 800;
-        }
-        &_3 {
-          font-weight: 700;
+        @each $color in $colors {
+          $i: index($colors, $color);
+          &_#{$i} {
+            background-color: $color;
+            height: 50px;
+            line-height: 50px;
+            width: 50px;
+            border-radius: 50%;
+          }
         }
       }
-      .value {
-        display: block;
-        color: red;
-        width: 30%;
+
+      .name_and_value {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        width: calc(100% - 60px);
+        margin-right: 5px;
+
+        .name {
+          display: block;
+          color: $accent;
+          font-size: larger;
+          font-weight: bold;
+          overflow-wrap: break-word;
+          width: 100%;
+        }
+
+        .value {
+          display: block;
+          color: red;
+          font-weight: normal;
+          width: 100%;
+        }
       }
     }
+
     mat-expansion-panel {
       margin: 0 auto;
     }
+
     .show_others {
       display: inline-block;
       font-weight: bold;
