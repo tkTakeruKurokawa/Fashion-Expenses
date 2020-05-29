@@ -4,12 +4,14 @@
 
     <form class="form" [formGroup]="register_form" (ngSubmit)="register()">
 
+        <span>登録されるブランド名：</span>
+        <span class="brand_name">{{create_brand_name()}}</span>
         <div *ngFor="let n of brand_count | range; let i = index">
             <div *ngIf="existing_form(i)" class="brand_forms">
                 <mat-form-field appearance="outline" [color]="color" class="brand_form">
                     <mat-label>ブランド名</mat-label>
-                    <input matInput [matAutocomplete]="autocomplete" class="input" formControlName="brand{{i}}"
-                        placeholder="ユニクロ" required>
+                    <input matInput type="text" [matAutocomplete]="autocomplete" class="input"
+                        formControlName="brand{{i}}" placeholder="ユニクロ" (keyup)="count_brands_word(true)" required>
                     <mat-autocomplete #autocomplete="matAutocomplete">
                         <mat-optgroup *ngFor="let brand of brand_options[i] | async" [label]="brand.char">
                             <mat-option *ngFor="let element of brand.elements" [value]="element.name">
@@ -17,11 +19,8 @@
                             </mat-option>
                         </mat-optgroup>
                     </mat-autocomplete>
-                    <mat-error *ngIf="brand_control(i).invalid">{{get_text_error_message('brand' + i )}}</mat-error>
-                    <!-- <mat-hint>
-                        ブランド名は統一して登録してください<br>
-                        一文字でも異なると違うブランドとして認識されます
-                    </mat-hint> -->
+                    <mat-error *ngIf="brand_control(i).invalid">{{get_text_error_message("brand" + i)}}</mat-error>
+                    <mat-hint>{{word_count("brand")}}</mat-hint>
                 </mat-form-field>
                 <button *ngIf="i === 0" mat-raised-button color="accent" type="button" (click)="increase_brand()"
                     class="brand_buttons">コラボブランドを追加</button>
@@ -32,9 +31,10 @@
 
         <mat-form-field appearance="outline" [color]="color" class="element">
             <mat-label>アイテム名</mat-label>
-            <input matInput id="item_name" class="input" formControlName="item_name" placeholder="オーバーサイズクルーネックT"
-                required>
+            <input matInput type="text" id="item_name" class="input" formControlName="item_name"
+                placeholder="オーバーサイズクルーネックT" required>
             <mat-error *ngIf="item_name_control().invalid">{{get_text_error_message('item_name')}}</mat-error>
+            <mat-hint>{{word_count("item_name")}}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" [color]="color" class="element">
@@ -49,6 +49,7 @@
             <mat-label>価格</mat-label>
             <input matInput id="value" type="number" class="input" formControlName="value" placeholder="3000" required>
             <mat-error *ngIf="value_control().invalid">{{get_value_error_message()}}</mat-error>
+            <mat-hint>9,999,999,999,999円 まで入力可能です</mat-hint>
         </mat-form-field>
 
         <div class="element">

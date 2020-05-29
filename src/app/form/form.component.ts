@@ -12,6 +12,8 @@ import { Observable, Subscription } from 'rxjs';
 import { startWith, map, filter, tap } from 'rxjs/operators';
 import { Output, EventEmitter } from '@angular/core';
 
+let brands_word_count: number = 0;
+
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -37,6 +39,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   required_error: string = 'この入力は必須です';
   max_text_error: string = '最大文字数は 100文字 です';
+  max_text = 100;
   sending: boolean = false;
   brand_count: number = 1;
 
@@ -52,20 +55,14 @@ export class FormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.register_form = this.fb.group({
-      brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required, max_text_validator]],
+      brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required, max_brands_word_validator]],
       item_name: [this.is_data_existing() ? this.data.item_name : null, [Validators.required, max_text_validator]],
       item_category: [this.is_data_existing() ? this.data.item_category : null, [Validators.required]],
       value: [this.is_data_existing() ? this.data.value : null, [Validators.required, max_value_validator]],
       image: [null],
     });
     if (this.is_data_existing()) {
-      if (this.data.image !== this.no_image_path) {
-        this.subscriptions.push(
-          this.afs.ref(this.data.image).getDownloadURL().subscribe(image => {
-            this.image_url = image;
-          })
-        );
-      }
+      this.initialize_data();
     }
 
     this.activate_filter(0);
@@ -89,6 +86,26 @@ export class FormComponent implements OnInit, OnDestroy {
     return (this.data === void 0) ? false : true;
   }
 
+  initialize_data() {
+    if (this.data.image !== this.no_image_path) {
+      this.subscriptions.push(
+        this.afs.ref(this.data.image).getDownloadURL().subscribe(image => {
+          this.image_url = image;
+        })
+      );
+    }
+
+    const list = this.data.brand.split(" x ");
+    const size = list.length;
+    list.forEach((brand, index) => {
+      console.log(brand, index);
+      this.register_form.patchValue({ ["brand" + index]: brand });
+      if (index < size - 1) {
+        this.increase_brand();
+      }
+    });
+  }
+
   brand_control(index: number): AbstractControl {
     return this.register_form.get('brand' + index);
   }
@@ -97,21 +114,61 @@ export class FormComponent implements OnInit, OnDestroy {
     return this.register_form.get('item_name');
   }
 
-  get_text_error_message(key: string): string {
-    if (this.register_form.get(key).hasError("required")) {
-      return this.required_error;
-    }
-    if (this.register_form.get(key).hasError("max_text_validator")) {
-      return this.max_text_error;
-    }
-  }
-
   item_category_control(): AbstractControl {
     return this.register_form.get('item_category');
   }
 
   value_control(): AbstractControl {
     return this.register_form.get('value');
+  }
+
+  word_count(type: string): string {
+    if (type === "brand") {
+      return this.count_brands_word() + " / " + this.max_text;
+    }
+    if (type === "item_name") {
+      return (this.register_form.get(type).value === null) ? "0 / " + this.max_text : this.register_form.get(type).value.length + " / " + this.max_text;
+    }
+  }
+
+  count_brands_word(flag?: boolean): number {
+    let count = 0;
+    let words = 0;
+    for (let index = 0; index < this.brand_count; index++) {
+      if (this.existing_form(index)) {
+        count += (this.register_form.get("brand" + index).value === null) ? 0 : this.register_form.get("brand" + index).value.length;
+        words++;
+      }
+    }
+    count += (words - 1) * 3;
+
+    if (flag) {
+      this.update_brands_word_count(count);
+    }
+
+    return count;
+  }
+
+  update_brands_word_count(count: number) {
+    brands_word_count = count;
+
+    for (let index = 0; index < this.brand_count; index++) {
+      if (this.existing_form(index) && (this.register_form.get("brand" + index) !== null)) {
+        this.register_form.get("brand" + index).updateValueAndValidity();
+      }
+    }
+  }
+
+  get_text_error_message(key: string): string {
+    if (this.register_form.get(key).hasError("required")) {
+      return this.required_error;
+    }
+    if (this.register_form.get(key).hasError("max_brands_word_validator")) {
+      return this.max_text_error;
+    }
+    if (this.register_form.get(key).hasError("max_text_validator")) {
+      return this.max_text_error;
+    }
   }
 
   get_value_error_message(): string {
@@ -129,12 +186,14 @@ export class FormComponent implements OnInit, OnDestroy {
 
   increase_brand() {
     this.brand_count++;
-    this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required, max_text_validator]));
+    this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required, max_brands_word_validator]));
+    this.count_brands_word(true);
     this.activate_filter(this.brand_count - 1);
   }
 
   decrease_brand(index: number) {
     this.register_form.removeControl("brand" + index);
+    this.count_brands_word(true);
   }
 
   is_invalid(): boolean {
@@ -246,14 +305,15 @@ export class FormComponent implements OnInit, OnDestroy {
 
   create_brand_name(): string {
     let brand = "";
-    let count = 0;
     for (let index = 0; index < this.brand_count; index++) {
-      if (this.register_form.contains("brand" + index)) {
-        if (count === 0) {
-          brand += this.register_form.get("brand" + index).value;
-          count++;
+      if (this.existing_form(index)) {
+        const name = (this.register_form.get("brand" + index).value === null) ? "" : this.register_form.get("brand" + index).value;
+        if (brand.length < 1) {
+          brand += name;
         } else {
-          brand += " x " + this.register_form.get("brand" + index).value;
+          // if (name.length > 0) {
+          brand += " x " + name;
+          // }
         }
       }
     }
@@ -278,6 +338,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   reset_form() {
     this.register_form.reset();
+    brands_word_count = 0;
     this.remove_image_data()
   }
 }
@@ -293,4 +354,8 @@ function max_text_validator(form_control: AbstractControl) {
   } else {
     return null;
   }
+}
+
+function max_brands_word_validator() {
+  return (brands_word_count > 100) ? { max_brands_word_validator: true } : null;
 }
