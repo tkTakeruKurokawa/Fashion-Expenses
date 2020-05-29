@@ -4,8 +4,8 @@
 
     <form class="form" [formGroup]="register_form" (ngSubmit)="register()">
 
-        <span>登録されるブランド名：</span>
-        <span class="brand_name">{{create_brand_name()}}</span>
+        <span>登録されるブランド名</span>
+        <span class="brand_name">" {{create_brand_name()}} "</span>
         <div *ngFor="let n of brand_count | range; let i = index">
             <div *ngIf="existing_form(i)" class="brand_forms">
                 <mat-form-field appearance="outline" [color]="color" class="brand_form">

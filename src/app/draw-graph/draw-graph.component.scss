@@ -1,5 +1,5 @@
 $accent: #00e600;
-$colors: rgb(255, 217, 0), rgb(221, 221, 221), rgb(212, 137, 39);
+$colors: rgb(255, 228, 78), rgba(221, 221, 221, 0.911), rgb(255, 181, 83);
 
 .title_width {
   width: 100%;
@@ -25,8 +25,9 @@ $colors: rgb(255, 217, 0), rgb(221, 221, 221), rgb(212, 137, 39);
     position: sticky;
     height: 100%;
     width: 50%;
-    top: 20%;
-    min-width: 300px;
+    top: 35%;
+    min-width: 450px;
+    margin-top: 70px;
   }
 
   .list {
@@ -43,56 +44,57 @@ $colors: rgb(255, 217, 0), rgb(221, 221, 221), rgb(212, 137, 39);
     }
 
     .data {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-      justify-content: space-between;
-      margin: 10px auto;
+      position: relative;
+      margin: 2em 0;
+      padding: 25px 10px 7px;
+      border: solid 4px #51ff51;
+      border-radius: 8px;
       background-color: #fff8e198;
-      box-shadow: 2px 2px 4px rgb(158, 158, 158);
-      width: 100%;
-      // border-top-left-radius: 25px 25px;
-      // border-bottom-left-radius: 25px 25px;
+      box-shadow: 10px 10px 15px -10px;
+      // box-shadow: 2px 2px 4px gray;
+
+      @each $color in $colors {
+        $i: index($colors, $color);
+        &_#{$i} {
+          border-color: $color;
+          box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.25);
+        }
+      }
 
       .rank {
-        display: block;
-        background-color: $accent;
-        color: black;
-        font-weight: 500;
-        height: 50px;
-        line-height: 50px;
-        width: 50px;
-        border-radius: 50%;
-        margin: 3px 0;
+        position: absolute;
+        display: inline-block;
+        top: -2px;
+        left: -2px;
+        padding: 0 9px;
+        height: 25px;
+        line-height: 25px;
+        font-size: 18px;
+        color: #ffffff;
+        font-weight: bold;
+        border-bottom-right-radius: 8px;
+        background: #51ff51;
 
         @each $color in $colors {
           $i: index($colors, $color);
           &_#{$i} {
             background-color: $color;
-            height: 50px;
-            line-height: 50px;
-            width: 50px;
-            border-radius: 50%;
           }
         }
       }
 
       .name_and_value {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-        width: calc(100% - 60px);
-        margin-right: 5px;
+        margin: 0;
+        padding: 0;
 
         .name {
           display: block;
           color: $accent;
-          font-size: larger;
+          font-size: 20px;
           font-weight: bold;
           overflow-wrap: break-word;
           width: 100%;
+          margin-bottom: 5px;
         }
 
         .value {
