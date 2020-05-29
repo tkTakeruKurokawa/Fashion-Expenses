@@ -22,10 +22,15 @@
                     <mat-error *ngIf="brand_control(i).invalid">{{get_text_error_message("brand" + i)}}</mat-error>
                     <mat-hint>{{word_count("brand")}}</mat-hint>
                 </mat-form-field>
-                <button *ngIf="i === 0" mat-raised-button color="accent" type="button" (click)="increase_brand()"
-                    class="brand_buttons">コラボブランドを追加</button>
-                <button *ngIf="i > 0" mat-raised-button type="button" (click)="decrease_brand(i)"
-                    class="brand_buttons">コラボブランドを削除</button>
+                <div class="brand_buttons">
+                    <button *ngIf="i === 0" mat-raised-button color="accent" type="button" class="brand_button"
+                        (click)="increase_brand()">コラボブランドを追加</button>
+                    <button *ngIf="i > 0" mat-raised-button type="button" class="brand_button"
+                        (click)="decrease_brand(i)">コラボブランドを削除</button>
+                    <!-- <div class="add_failed"> -->
+                    <span *ngIf="i === 0" class="add_failed">{{ add_failed_message }}</span>
+                    <!-- </div> -->
+                </div>
             </div>
         </div>
 

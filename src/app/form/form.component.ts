@@ -39,6 +39,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   required_error: string = 'この入力は必須です';
   max_text_error: string = '最大文字数は 100文字 です';
+  add_failed_message: string = "";
   max_text = 100;
   sending: boolean = false;
   brand_count: number = 1;
@@ -185,10 +186,17 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   increase_brand() {
-    this.brand_count++;
-    this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required, max_brands_word_validator]));
-    this.count_brands_word(true);
-    this.activate_filter(this.brand_count - 1);
+    if (this.brand_count > 4) {
+      this.add_failed_message = "コラボブランド数は最大で 5個 です";
+      setTimeout(() => {
+        this.add_failed_message = "";
+      }, 3000);
+    } else {
+      this.brand_count++;
+      this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required, max_brands_word_validator]));
+      this.count_brands_word(true);
+      this.activate_filter(this.brand_count - 1);
+    }
   }
 
   decrease_brand(index: number) {
