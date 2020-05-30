@@ -8,8 +8,8 @@ import { Autocomplete } from "../class-interface/autocomplete";
 import { DataService } from '../service/data.service';
 import { Options } from "../class-interface/item-categories";
 import * as moment from "moment";
-import { Observable, Subscription } from 'rxjs';
-import { startWith, map, filter, tap } from 'rxjs/operators';
+import { Observable, Subscription, interval, Subject, BehaviorSubject } from 'rxjs';
+import { startWith, map, filter, tap, debounceTime } from 'rxjs/operators';
 import { Output, EventEmitter } from '@angular/core';
 
 let brands_word_count: number = 0;
@@ -21,6 +21,8 @@ let brands_word_count: number = 0;
 })
 export class FormComponent implements OnInit, OnDestroy {
   @Input() data?: Data;
+  submitted_data: Data;
+  submitted_data_list: Data[] = [];
   register_form: FormGroup;
   file;
   file_exist: boolean = false;
@@ -43,6 +45,7 @@ export class FormComponent implements OnInit, OnDestroy {
   max_text = 100;
   sending: boolean = false;
   brand_count: number = 1;
+  timer: NodeJS.Timer;
 
   @Output() event = new EventEmitter<boolean>();
 
@@ -187,10 +190,12 @@ export class FormComponent implements OnInit, OnDestroy {
 
   increase_brand() {
     if (this.brand_count > 4) {
+      if (!this.add_failed_message) {
+        setTimeout(() => {
+          this.add_failed_message = "";
+        }, 5000);
+      }
       this.add_failed_message = "コラボブランド数は最大で 5個 です";
-      setTimeout(() => {
-        this.add_failed_message = "";
-      }, 3000);
     } else {
       this.brand_count++;
       this.register_form.addControl("brand" + (this.brand_count - 1), new FormControl(null, [Validators.required, max_brands_word_validator]));
@@ -243,16 +248,20 @@ export class FormComponent implements OnInit, OnDestroy {
 
   cancel() {
     this.reset_form();
+    this.submitted_data = null;
+    this.submitted_data_list = [];
     this.event.emit(false);
   }
 
   register() {
     this.submit_new_data();
+    this.submitted_data = null;
+    this.submitted_data_list = [];
     this.event.emit(false);
   }
 
   continue_register() {
-    this.submit_new_data();
+    this.submit_new_data(true);
   }
 
   edit() {
@@ -260,7 +269,7 @@ export class FormComponent implements OnInit, OnDestroy {
     this.event.emit(false);
   }
 
-  async submit_new_data() {
+  async submit_new_data(delivery_notification?: boolean) {
     this.sending = true;
 
     if (this.file_exist) {
@@ -271,6 +280,11 @@ export class FormComponent implements OnInit, OnDestroy {
 
     const data = this.create_data();
     await this.data_service.set_new_data_to_firestore(data);
+
+    if (delivery_notification) {
+      this.show_notification(data);
+    }
+
     this.reset_form();
     this.sending = false;
   }
@@ -294,6 +308,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
     const data = this.create_data();
     await this.data_service.set_edit_data_to_firestore(data, this.data.doc_key);
+
     this.reset_form();
   }
 
@@ -344,8 +359,32 @@ export class FormComponent implements OnInit, OnDestroy {
     }
   }
 
+  show_notification(data: Data) {
+    this.submitted_data_list.push({
+      brand: data.brand,
+      item_name: data.item_name,
+      item_category: data.item_category,
+      value: data.value,
+      image: data.image
+    });
+
+    if (this.submitted_data_list.length > 0) {
+      if (this.submitted_data) {
+        clearTimeout(this.timer);
+      }
+
+      this.timer = setTimeout(() => {
+        this.submitted_data = null;
+      }, 5000);
+
+      this.submitted_data = this.submitted_data_list.pop();
+    }
+
+  }
+
   reset_form() {
     this.register_form.reset();
+    this.brand_count = 1;
     brands_word_count = 0;
     this.remove_image_data()
   }

@@ -84,4 +84,10 @@
                 (click)="edit()">変更する</button>
         </div>
     </form>
+
+    <div *ngIf="submitted_data" class="notification">
+        <span class="submitted_message">以下のアイテムを登録しました</span>
+        <span class="submitted_item">{{ submitted_data.brand }}</span>
+        <span class="submitted_item bottom">{{ submitted_data.item_name }}</span>
+    </div>
 </div>
