@@ -1,25 +1,23 @@
 .register {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  overflow: auto;
-  z-index: 20;
   height: 100%;
   width: 100%;
   margin: 0 auto;
   text-align: center;
-  background-color: white;
 
   .form {
     display: flex;
     flex-direction: column;
     text-align: left;
     width: 50%;
+    z-index: 30;
+    padding: 50px 50px;
     margin: 0 auto;
+    margin-bottom: 20px;
+    background-color: white;
+    box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
 
     .brand_name {
+      font-size: 18px;
       overflow-wrap: break-word;
     }
 
@@ -42,8 +40,9 @@
         .brand_button {
           height: 55px;
           width: 100%;
+          padding: 10px;
           margin-top: 4px;
-          font-size: 10px;
+          font-size: 1vw;
           white-space: initial;
           line-height: initial;
         }
@@ -52,7 +51,7 @@
           margin: 0;
           padding: 0;
           margin-top: 8px;
-          font-size: 11px;
+          font-size: 1vw;
           color: red;
           overflow-wrap: break-word;
         }
@@ -79,9 +78,10 @@
       button {
         height: 50px;
         width: 45%;
+        padding: 10px;
         margin-top: 5px;
         margin-bottom: 10px;
-        font-size: medium;
+        font-size: 1.4vw;
       }
     }
 
@@ -96,8 +96,17 @@
     .bottom_buttons {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
-      margin-bottom: 100px;
+      flex-wrap: wrap;
+      justify-content: space-around;
+
+      .button_size {
+        // padding-top: 10px;
+        // padding-bottom: 10px;
+        padding: 10px;
+        white-space: initial;
+        line-height: initial;
+        font-size: 1.3vw;
+      }
     }
   }
 
@@ -121,8 +130,9 @@
 
     .submitted_message {
       display: block;
-      font-size: 14px;
+      font-size: 15px;
       color: #51ff51;
+      margin-bottom: 5px;
     }
 
     .submitted_item {
@@ -131,7 +141,7 @@
     }
 
     .bottom {
-      padding-bottom: 3px;
+      padding-bottom: 5px;
     }
   }
 }

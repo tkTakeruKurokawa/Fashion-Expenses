@@ -1,14 +1,30 @@
-mat-toolbar {
+$break-size: 490px;
+
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
+.header {
   position: fixed;
-  z-index: 10;
   top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 
   .title {
     display: block;
     font-size: xx-large;
+    padding: 0;
+
+    @include max-screen($break-size) {
+      font-size: 20px;
+    }
   }
 
-  .menu {
+  .menus {
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
@@ -30,6 +46,32 @@ mat-toolbar {
     }
     .sign_in {
       background-color: whitesmoke;
+    }
+  }
+
+  .min_menus {
+    display: none;
+  }
+
+  @media screen and (max-width: 850px) {
+    .normal_menus {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 851px) {
+    .break_menus {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .break_menus {
+      display: none;
+    }
+
+    .min_menus {
+      display: flex;
     }
   }
 }

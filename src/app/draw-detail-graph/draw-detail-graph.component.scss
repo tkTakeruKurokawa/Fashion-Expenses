@@ -1,8 +1,10 @@
 .body {
   width: 100%;
+  margin-bottom: 20px;
   background-color: white;
   text-align: center;
   overflow-wrap: break-word;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
 
   .title {
     padding: 20px 0;
@@ -11,9 +13,10 @@
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    justify-content: space-around;
     height: 100%;
     width: 100%;
+    text-align: center;
 
     .chart-value {
       height: 100%;

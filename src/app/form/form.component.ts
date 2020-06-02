@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { Location } from "@angular/common";
 import { SessionService } from '../service/session.service';
 import { Session } from '../class-interface/Session';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
@@ -10,7 +11,6 @@ import { Options } from "../class-interface/item-categories";
 import * as moment from "moment";
 import { Observable, Subscription, interval, Subject, BehaviorSubject } from 'rxjs';
 import { startWith, map, filter, tap, debounceTime } from 'rxjs/operators';
-import { Output, EventEmitter } from '@angular/core';
 
 let brands_word_count: number = 0;
 
@@ -45,19 +45,20 @@ export class FormComponent implements OnInit, OnDestroy {
   max_text = 100;
   sending: boolean = false;
   brand_count: number = 1;
-  timer: NodeJS.Timer;
-
-  @Output() event = new EventEmitter<boolean>();
+  timer;
 
   constructor(
     private session_service: SessionService,
     private data_service: DataService,
     private fb: FormBuilder,
     private afs: AngularFireStorage,
+    private location: Location,
     private cd: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.data_service.set_form_writable(true);
+    this.data = this.data_service.get_edit_data();
     this.register_form = this.fb.group({
       brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required, max_brands_word_validator]],
       item_name: [this.is_data_existing() ? this.data.item_name : null, [Validators.required, max_text_validator]],
@@ -68,6 +69,8 @@ export class FormComponent implements OnInit, OnDestroy {
     if (this.is_data_existing()) {
       this.initialize_data();
     }
+
+    this.data_service.get_cloth_data_subject().subscribe()
 
     this.activate_filter(0);
 
@@ -84,6 +87,8 @@ export class FormComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+
+    this.data_service.set_form_writable(false);
   }
 
   is_data_existing(): boolean {
@@ -102,7 +107,6 @@ export class FormComponent implements OnInit, OnDestroy {
     const list = this.data.brand.split(" x ");
     const size = list.length;
     list.forEach((brand, index) => {
-      console.log(brand, index);
       this.register_form.patchValue({ ["brand" + index]: brand });
       if (index < size - 1) {
         this.increase_brand();
@@ -250,14 +254,14 @@ export class FormComponent implements OnInit, OnDestroy {
     this.reset_form();
     this.submitted_data = null;
     this.submitted_data_list = [];
-    this.event.emit(false);
+    this.location.back()
   }
 
   register() {
     this.submit_new_data();
     this.submitted_data = null;
     this.submitted_data_list = [];
-    this.event.emit(false);
+    this.location.back()
   }
 
   continue_register() {
@@ -266,7 +270,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   edit() {
     this.submit_edit_data();
-    this.event.emit(false);
+    this.location.back()
   }
 
   async submit_new_data(delivery_notification?: boolean) {
@@ -291,18 +295,15 @@ export class FormComponent implements OnInit, OnDestroy {
 
   async submit_edit_data() {
     if (this.register_form.get("image").value !== null) {
-      if (this.data.image !== this.no_image_path) {
-        this.afs.ref(this.data.image).delete();
-      }
+      this.delete_firestorage_data();
+
       const storage_ref = this.afs.ref(this.file_path);
       const result = await storage_ref.put(this.file, { 'cacheControl': 'public, max-age=86400' });
       console.log(result);
 
     } else {
       if (!this.image_url) {
-        if (this.data.image !== this.no_image_path) {
-          this.afs.ref(this.data.image).delete();
-        }
+        this.delete_firestorage_data();
       }
     }
 
@@ -310,6 +311,12 @@ export class FormComponent implements OnInit, OnDestroy {
     await this.data_service.set_edit_data_to_firestore(data, this.data.doc_key);
 
     this.reset_form();
+  }
+
+  delete_firestorage_data() {
+    if (this.data.image !== this.no_image_path) {
+      this.afs.ref(this.data.image).delete();
+    }
   }
 
   create_data(): Data {
@@ -323,6 +330,7 @@ export class FormComponent implements OnInit, OnDestroy {
       value: this.register_form.get("value").value,
       image: image_path
     };
+
     return data;
   }
 

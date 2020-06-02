@@ -15,6 +15,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatMenuModule } from "@angular/material/menu";
 import { HeaderComponent } from './header/header.component';
 import { TopComponent } from './top/top.component';
 import { BrandsComponent } from './brands/brands.component';
@@ -75,6 +76,7 @@ import { RangePipe } from './pipe/range.pipe';
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatMenuModule,
     FlexLayoutModule,
     ChartsModule,
     AngularFireModule.initializeApp(environment.firebase),

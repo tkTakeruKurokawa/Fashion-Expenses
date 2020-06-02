@@ -1,11 +1,5 @@
-<div *ngIf="login">
-    <div *ngIf="!writable" class="add_button">
-        <button (click)="form_open()" mat-fab color="accent">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
-
-    <div *ngIf="writable">
-        <app-form (event)="form_close()"></app-form>
-    </div>
+<div *ngIf="login && !form_writable()" class="add_button">
+    <a mat-fab id="button" routerLink="/registration" (click)="initialize_form()">
+        <mat-icon id="icon">add</mat-icon>
+    </a>
 </div>

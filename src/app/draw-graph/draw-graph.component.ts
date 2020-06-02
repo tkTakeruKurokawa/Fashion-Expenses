@@ -31,7 +31,7 @@ class DrawGraph {
   ];
   bar_options: any = {
     responsive: true,
-    mainAspectRate: false,
+    // mainAspectRate: false,
     legend: {
       position: "bottom",
     },
@@ -69,16 +69,20 @@ export class DrawGraphComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subscription = this.data_service.get_cloth_data()
+    this.subscription = this.data_service.get_cloth_data_subject()
       .subscribe(data => {
         this.draw_graph = new DrawGraph();
-        this.draw_graph.clothes = data;
-        this.draw_graph.number_of_data = data.length;
+
+        if (data) {
+          this.draw_graph.clothes = data;
+          this.draw_graph.number_of_data = data.length;
+        }
 
         this.make_ranking();
         this.sort_ranking();
         this.display_filter();
       });
+
   }
 
   make_ranking() {

@@ -114,7 +114,7 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
     }
 
 
-    this.subscription = this.data_service.get_cloth_data().subscribe(cloth_data => {
+    this.subscription = this.data_service.get_cloth_data_subject().subscribe(cloth_data => {
       this.detail = new Detail();
       this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]);
 

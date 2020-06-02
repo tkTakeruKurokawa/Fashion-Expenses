@@ -24,9 +24,16 @@ $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
 html,
 body {
   height: 100%;
-}
-body {
+  min-width: 320px;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #fdf5e6;
+  // background-color: #fdf5e6;
+  // background-color: ;
+  background: rgb(253, 245, 230);
+  background: linear-gradient(
+    90deg,
+    rgba(253, 245, 230, 1) 0%,
+    rgb(247, 255, 201) 50%,
+    rgba(215, 255, 215, 1) 100%
+  );
 }

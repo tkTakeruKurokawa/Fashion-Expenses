@@ -4,16 +4,20 @@ import { Observable, of, Subject, BehaviorSubject, pipe } from 'rxjs';
 import { Data } from "../class-interface/data";
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { map, take, switchMap, tap } from 'rxjs/operators';
+import { map, take, switchMap, tap, startWith, distinctUntilChanged } from 'rxjs/operators';
 import { SessionService } from './session.service';
 import { Session } from '../class-interface/Session';
 import { Autocomplete } from "../class-interface/autocomplete";
 import { Options } from "../class-interface/item-categories";
+import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+  cloth_data: Data[] = [];
+  cloth_data_subject = new BehaviorSubject<Data[]>(null);
+  // cloth_data_subject = new Subject<Data[]>();
   clothes: Observable<Data[]>;
   brand_options: Autocomplete[] = [];
   search_options: Autocomplete[] = [];
@@ -21,9 +25,8 @@ export class DataService {
   filtered_search_options: Observable<Autocomplete[]>;
   search_options_subject = new Subject<Autocomplete[]>();
 
-  result_subject = new Subject<Map<string, string>>();
-  result: Map<string, string>;
-  search_property = ["brand", "item_category"];
+  form_writable = false;
+  edit_data: Data;
 
   uid: string = "";
 
@@ -32,7 +35,6 @@ export class DataService {
     private store: AngularFirestore,
     private storage: AngularFireStorage,
   ) { }
-
 
   get_data_from_firestore() {
     this.session_service.session_state.subscribe((session: Session) => {
@@ -44,21 +46,33 @@ export class DataService {
   }
 
   get_cloth_data_list(uid: string) {
-    this.clothes = this.store
+    this.store
       .collection("users")
       .doc(uid)
       .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
       .snapshotChanges()
       .pipe(
-        map(data_list => {
-          return this.create_cloth_data_list(data_list);
-        }),
-        tap(cloth_data => this.create_search_options_observable(cloth_data)),
-        tap(() => this.sort_autocomplete_options()),
-        tap(() => this.search_options_subject.next(this.search_options)),
-        // tap(() => this.create_search_options_observable()),
         tap(() => console.count())
       )
+      .subscribe(cloth_data => {
+        const clothes = this.create_cloth_data_list(cloth_data)
+        this.cloth_data_subject.next(clothes);
+        this.create_search_options_observable(clothes)
+        this.search_options_subject.next(this.search_options);
+      });
+    // .pipe(
+    //   map(data_list => {
+    //     return this.create_cloth_data_list(data_list);
+    //   }),
+    //   tap(cloth_data => this.create_search_options_observable(cloth_data)),
+    //   tap(() => this.search_options_subject.next(this.search_options)),
+    //   tap(cloth_data => {
+    //     this.cloth_data = cloth_data;
+    //     this.cloth_data_subject.next(cloth_data);
+    //   }),
+    //   // tap(() => console.trace()),
+    //   tap(() => console.count())
+    // );
   }
 
   create_cloth_data_list(data_list: DocumentChangeAction<Data>[]): Data[] {
@@ -90,8 +104,33 @@ export class DataService {
     return clothes;
   }
 
+  get_new_data_from_firebase() {
+    this.session_service.session_state.subscribe((session: Session) => {
+      if (session) {
+        this.uid = session.uid;
+        this.get_new_data(session.uid);
+      }
+    });
+  }
+
+  get_new_data(uid: string) {
+    this.store
+      .collection("users")
+      .doc(uid)
+      .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
+      .snapshotChanges()
+      .pipe(
+        tap(() => console.count())
+      )
+      .subscribe(data_list => {
+        this.cloth_data_subject.next(this.create_cloth_data_list(data_list));
+      });
+  }
+
   create_search_options_observable(cloth_data_list: Data[]) {
     this.search_options = this.create_search_options(cloth_data_list);
+
+    this.sort_autocomplete_options()
   }
 
   create_search_options(cloth_data_list: Data[]): Autocomplete[] {
@@ -223,8 +262,14 @@ export class DataService {
       .set(cloth_data);
   }
 
-  get_cloth_data(): Observable<Data[]> {
-    return this.clothes;
+  // get_cloth_data(): Observable<Data[]> {
+  //   return this.clothes
+  //     .pipe(tap(data => console.log("firestore: ", data)));
+  // }
+
+  get_cloth_data_subject(): Observable<Data[]> {
+    // return this.cloth_data_subject.pipe(distinctUntilChanged((pre: Data[], cur: Data[]) => { return pre !== cur }));
+    return this.cloth_data_subject;
   }
 
   delete_data_from_firestore(doc_key: string, image_path: string) {
@@ -235,10 +280,26 @@ export class DataService {
       .doc(doc_key)
       .delete();
 
-    if ("no_image.png" !== image_path) {
+    if (image_path !== "../../assets/no_image.png") {
       const storage_rf = this.storage.ref(image_path);
       storage_rf.delete();
     }
+  }
+
+  set_form_writable(flag: boolean) {
+    this.form_writable = flag
+  }
+
+  get_form_writable(): boolean {
+    return this.form_writable;
+  }
+
+  set_edit_data(data: Data) {
+    this.edit_data = data;
+  }
+
+  get_edit_data(): Data {
+    return this.edit_data
   }
 
   check_ja(str: string): boolean {

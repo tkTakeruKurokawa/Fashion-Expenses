@@ -11,6 +11,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { AuthGuard } from './guard/auth.guard';
 import { LoginGuard } from './guard/login.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { FormComponent } from './form/form.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'items', component: ItemsComponent, canActivate: [AuthGuard] },
   { path: 'items/:category', component: DrawDetailGraphComponent, canActivate: [AuthGuard] },
   { path: 'data-list', component: DataListComponent, canActivate: [AuthGuard] },
+  { path: 'registration', component: FormComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] },
 ];
 

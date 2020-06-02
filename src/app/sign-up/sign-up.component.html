@@ -2,11 +2,24 @@
     <h1>アカウント登録</h1>
 
     <form class="form" [formGroup]="sign_up_form" (ngSubmit)="sign_up()">
-        <label for="email">メールアドレス</label>
-        <input type="email" id="email" class="input" formControlName="email" placeholder="example@example.com" required>
-        <label for="password">パスワード</label>
-        <input type="password" id="password" class="input" formControlName="password" required>
-        <button mat-raised-button color="accent" type="submit" class="button">登録</button>
+        <mat-form-field appearance="outline" color="accent" class="element">
+            <mat-label>メールアドレス</mat-label>
+            <input matInput type="email" id="email" class="input" formControlName="email"
+                placeholder="example@example.com" required>
+            <mat-error *ngIf="sign_up_form.get('email').hasError('required')">メールアドレスの入力は必須です</mat-error>
+            <mat-error *ngIf="sign_up_form.get('email').hasError('email')">メールアドレスの形式になっていません</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="accent" class="element">
+            <mat-label>パスワード</mat-label>
+            <input matInput type="password" id="password" class="input" formControlName="password" required>
+            <mat-hint>パスワードは6文字以上必要</mat-hint>
+            <mat-error *ngIf="sign_up_form.get('password').hasError('required')">パスワードの入力は必須です</mat-error>
+            <mat-error *ngIf="sign_up_form.get('password').hasError('minlength')">パスワードは6文字以上必要です</mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button [disabled]="sign_up_form.invalid" color="accent" type="submit"
+            class="button">ログイン</button>
     </form>
 
     <a routerLink="/sign-in">ログインはこちら</a>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl } from "@angular/forms";
 import { SessionService } from '../service/session.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
     this.sign_in_form = this.fb.group({
       'email': ['', [Validators.required, Validators.email]],
-      'password': ['', [Validators.required]]
+      'password': ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 

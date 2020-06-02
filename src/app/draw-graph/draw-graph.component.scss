@@ -1,118 +1,177 @@
 $accent: #00e600;
 $colors: rgb(255, 228, 78), rgba(221, 221, 221, 0.911), rgb(255, 181, 83);
+$breakpoint: 700px;
 
-.title_width {
-  width: 100%;
-  background-color: white;
-  text-align: center;
-
-  .title {
-    padding: 20px 0;
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
   }
 }
 
-.main {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-  padding-bottom: 10px;
+@mixin font-size-vw($size) {
+  font-size: ($size / $breakpoint) * 100 + vw;
+}
 
-  .chart {
-    position: sticky;
-    height: 100%;
-    width: 50%;
-    top: 35%;
-    min-width: 450px;
-    margin-top: 70px;
+.depiction_space {
+  width: 100%;
+  background-color: white;
+  text-align: center;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+  margin: 10px 0;
+
+  .title {
+    padding: 20px 0;
+    font-size: 3vw;
+    margin-bottom: 0;
+
+    @include max-screen($breakpoint) {
+      font-size: 25px;
+    }
   }
 
-  .list {
+  .main {
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    // flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
     height: 100%;
-    width: 45%;
-    margin: 0 auto;
-    text-align: center;
+    width: 100%;
+    padding-bottom: 10px;
 
-    .total {
-      font-size: large;
-      font-weight: lighter;
-      width: 100%;
-      margin: 0 auto;
+    @include max-screen($breakpoint) {
+      flex-direction: column;
     }
 
-    .data {
-      position: relative;
-      margin: 2em 0;
-      padding: 25px 10px 7px;
-      border: solid 4px #51ff51;
-      border-radius: 8px;
-      background-color: #fff8e198;
-      box-shadow: 10px 10px 15px -10px;
-      // box-shadow: 2px 2px 4px gray;
+    .chart {
+      position: sticky;
+      height: 100%;
+      width: 50vw;
+      top: 35%;
+      min-width: 400px;
+      margin-top: 100px;
 
-      @each $color in $colors {
-        $i: index($colors, $color);
-        &_#{$i} {
-          border-color: $color;
-          box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.25);
+      @include max-screen($breakpoint) {
+        position: relative;
+        width: 95%;
+        min-width: auto;
+        margin: 0 auto;
+        margin-top: 0px;
+        margin-bottom: 20px;
+        overflow-wrap: break-word;
+      }
+    }
+
+    .list {
+      height: 100%;
+      width: calc(40vw - 40px);
+      margin: 0 auto;
+      text-align: center;
+
+      @include max-screen($breakpoint) {
+        width: 70%;
+        margin-top: 0px;
+      }
+
+      .total {
+        font-size: 1.8vw;
+        font-weight: lighter;
+        width: 100%;
+        margin: 0 auto;
+
+        @include max-screen($breakpoint) {
+          font-size: 20px;
         }
       }
 
-      .rank {
-        position: absolute;
-        display: inline-block;
-        top: -2px;
-        left: -2px;
-        padding: 0 9px;
-        height: 25px;
-        line-height: 25px;
-        font-size: 18px;
-        color: #ffffff;
-        font-weight: bold;
-        border-bottom-right-radius: 8px;
-        background: #51ff51;
+      .data {
+        position: relative;
+        margin: 2em 0;
+        padding: 30px 10px 7px;
+        border: solid 4px #51ff51;
+        border-radius: 8px;
+        background-color: #fff8e198;
+        box-shadow: 10px 10px 15px -10px;
 
         @each $color in $colors {
           $i: index($colors, $color);
           &_#{$i} {
-            background-color: $color;
+            border-color: $color;
+            box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.25);
+          }
+        }
+
+        .rank {
+          position: absolute;
+          display: inline-block;
+          top: -2px;
+          left: -2px;
+          padding: 0 9px;
+          height: 30px;
+          line-height: 30px;
+          font-size: 2.3vw;
+          color: #ffffff;
+          font-weight: bold;
+          border-bottom-right-radius: 8px;
+          background: #51ff51;
+
+          @include max-screen($breakpoint) {
+            font-size: 18px;
+          }
+
+          @each $color in $colors {
+            $i: index($colors, $color);
+            &_#{$i} {
+              background-color: $color;
+            }
+          }
+        }
+
+        .name_and_value {
+          margin: 0;
+          padding: 0;
+          line-height: normal;
+
+          .name {
+            display: block;
+            color: $accent;
+            font-size: 2.5vw;
+            font-weight: bold;
+            overflow-wrap: break-word;
+            width: 100%;
+            margin-bottom: 5px;
+
+            @include max-screen($breakpoint) {
+              font-size: 20px;
+            }
+          }
+
+          .value {
+            display: block;
+            color: red;
+            font-size: 1.8vw;
+            font-weight: normal;
+            width: 100%;
+
+            @include max-screen($breakpoint) {
+              font-size: 15px;
+            }
           }
         }
       }
 
-      .name_and_value {
-        margin: 0;
-        padding: 0;
-
-        .name {
-          display: block;
-          color: $accent;
-          font-size: 20px;
-          font-weight: bold;
-          overflow-wrap: break-word;
-          width: 100%;
-          margin-bottom: 5px;
-        }
-
-        .value {
-          display: block;
-          color: red;
-          font-weight: normal;
-          width: 100%;
-        }
+      mat-expansion-panel {
+        margin: 0 auto;
       }
-    }
 
-    mat-expansion-panel {
-      margin: 0 auto;
-    }
-
-    .show_others {
-      display: inline-block;
-      font-weight: bold;
+      .show_others {
+        display: block;
+        font-size: 1.4vw;
+        width: 30%;
+        padding: 10px;
+        margin: 0 auto;
+      }
     }
   }
 }

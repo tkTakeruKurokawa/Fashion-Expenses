@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SessionService } from '../service/session.service';
 import { Session } from '../class-interface/Session';
-import { DataService } from '../service/data.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 
 @Component({
@@ -16,7 +15,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private session_service: SessionService,
-    private data_service: DataService,
   ) { }
 
   ngOnInit() {

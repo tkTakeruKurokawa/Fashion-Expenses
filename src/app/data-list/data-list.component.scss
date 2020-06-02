@@ -1,3 +1,11 @@
+$break-size: 850px;
+
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
 .cards {
   display: -webkit-flex;
   display: flex;
@@ -27,10 +35,14 @@
 
     .image {
       margin: 0 auto;
+      margin-bottom: 5px;
       height: 300px;
       width: 100%;
       object-fit: contain;
-      // object-position: center center;
+
+      @include max-screen($break-size) {
+        height: 200px;
+      }
     }
 
     .action {

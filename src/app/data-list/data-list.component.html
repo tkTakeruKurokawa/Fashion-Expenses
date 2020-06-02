@@ -22,13 +22,9 @@
                 <p>{{data.value | currency:'JPY'}}</p>
             </mat-card-content>
             <mat-card-actions class="action">
-                <a mat-raised-button (click)="edit_this_data(data)" color="accent">編集</a>
-                <a mat-raised-button (click)="delete_this_data(data.doc_key, data.image)">削除</a>
+                <a mat-raised-button routerLink="/registration" (click)="edit_this_data(data)" color="accent">編集</a>
+                <button mat-raised-button type="button" (click)="delete_this_data(data.doc_key, data.image)">削除</button>
             </mat-card-actions>
         </mat-card>
     </div>
-</div>
-
-<div *ngIf="writable">
-    <app-form (event)="close_edit()" [data]="data"></app-form>
 </div>

@@ -1,5 +1,15 @@
+$break-size: 490px;
+
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
 mat-form-field {
+  position: relative;
   margin-left: 5px;
+  width: 150px;
 }
 
 #option {

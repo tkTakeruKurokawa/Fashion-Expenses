@@ -4,14 +4,14 @@
 
 <div *ngIf="draw_graph.number_of_data > 0">
     <div *ngFor="let title of titles; let first_index = index">
-        <div id="{{draw_graph.url_categories[first_index]}}-{{contents[first_index]}}" class="title_width">
+        <div id="{{draw_graph.url_categories[first_index]}}-{{contents[first_index]}}" class="depiction_space">
             <h1 class="title">{{title}}</h1>
 
             <div class="main">
                 <div class="chart">
                     <canvas baseChart [data]="draw_graph.bar_values[first_index]"
                         [labels]="draw_graph.bar_names[first_index]" [options]="draw_graph.bar_options"
-                        [legend]="draw_graph.bar_legend" [chartType]="draw_graph.bar_type">
+                        [legend]="draw_graph.bar_legend" [chartType]="draw_graph.bar_type" id="canvas">
                     </canvas>
                 </div>
 

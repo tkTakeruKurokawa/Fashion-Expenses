@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SessionService } from '../service/session.service';
 import { Session } from '../class-interface/Session';
 import { Observable, Subscription } from 'rxjs';
+import { DataService } from "../service/data.service";
 
 @Component({
   selector: 'app-register',
@@ -11,10 +12,10 @@ import { Observable, Subscription } from 'rxjs';
 export class RegisterComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   login: boolean = false;
-  writable: boolean = false;
 
   constructor(
     private session_service: SessionService,
+    private data_service: DataService,
   ) { }
 
   ngOnInit() {
@@ -29,13 +30,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  form_open() {
-    this.writable = true;
+  form_writable(): boolean {
+    return this.data_service.get_form_writable();
   }
 
-  form_close(event_data: boolean) {
-    this.writable = event_data;
+  initialize_form() {
+    this.data_service.set_edit_data(undefined);
   }
-
-
 }

@@ -1,10 +1,18 @@
 .add_button {
   position: absolute;
-  right: 6%;
-  bottom: 12%;
+  right: 80px;
+  bottom: 80px;
 
-  button {
-    position: -webkit-sticky;
+  #button {
+    position: -webkit-fixed;
     position: fixed;
+
+    #icon {
+      position: relative;
+      top: -8px;
+      left: -8px;
+      font-size: 40px;
+      vertical-align: unset;
+    }
   }
 }

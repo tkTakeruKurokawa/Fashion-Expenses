@@ -4,7 +4,7 @@
 
     <form class="form" [formGroup]="register_form" (ngSubmit)="register()">
 
-        <span>登録されるブランド名</span>
+        <span class="brand_name">登録されるブランド名</span>
         <span class="brand_name">" {{create_brand_name()}} "</span>
         <div *ngFor="let n of brand_count | range; let i = index">
             <div *ngIf="existing_form(i)" class="brand_forms">
@@ -58,7 +58,7 @@
         </mat-form-field>
 
         <div class="element">
-            <span>写真（5MB以下，任意）<br></span>
+            <span>写真（5MB以下，任意<br></span>
             <span *ngIf="file_size > 5000000" class="image_error">ファイルサイズが5MBを超えています</span>
             <input hidden #file_upload type="file" accept="image/*" formControlName="image"
                 (change)="set_image_data($event)">
@@ -75,13 +75,13 @@
         </div>
 
         <div class="element bottom_buttons">
-            <button mat-raised-button type="reset" (click)="cancel()">キャンセル</button>
-            <button mat-raised-button *ngIf="!is_data_existing()" [disabled]="is_invalid()" type="submit"
-                color="accent">登録する</button>
-            <button mat-raised-button *ngIf="!is_data_existing()" [disabled]="is_invalid()" type="button" color="accent"
-                (click)="continue_register()">登録して続ける</button>
-            <button mat-raised-button *ngIf="is_data_existing()" [disabled]="is_invalid()" type="button" color="accent"
-                (click)="edit()">変更する</button>
+            <button mat-raised-button class="button_size" type="reset" (click)="cancel()">キャンセル</button>
+            <button mat-raised-button class="button_size" *ngIf="!is_data_existing()" [disabled]="is_invalid()"
+                type="submit" color="accent">登録する</button>
+            <button mat-raised-button class="button_size" *ngIf="!is_data_existing()" [disabled]="is_invalid()"
+                type="button" color="accent" (click)="continue_register()">登録して続ける</button>
+            <button mat-raised-button class="button_size" *ngIf="is_data_existing()" [disabled]="is_invalid()"
+                type="button" color="accent" (click)="edit()">変更する</button>
         </div>
     </form>
 

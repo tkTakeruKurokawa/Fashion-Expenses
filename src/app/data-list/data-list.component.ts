@@ -26,10 +26,13 @@ export class DataListComponent implements OnInit, OnDestroy {
   }
 
   get_cloth_list() {
-    this.subscription = this.data_service.get_cloth_data()
+    this.subscription = this.data_service.get_cloth_data_subject()
       .subscribe(cloth_list => {
-        this.cloth_data = cloth_list
-        this.number_of_data = this.cloth_data.length;
+        if (cloth_list) {
+
+          this.cloth_data = cloth_list
+          this.number_of_data = this.cloth_data.length;
+        }
       });
   }
 
@@ -38,12 +41,7 @@ export class DataListComponent implements OnInit, OnDestroy {
   }
 
   edit_this_data(cloth_data: Data) {
-    this.writable = true;
-    this.data = cloth_data;
-  }
-
-  close_edit(event_data: boolean) {
-    this.writable = event_data;
+    this.data_service.set_edit_data(cloth_data);
   }
 
   delete_this_data(doc_key: string, image_path: string) {

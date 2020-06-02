@@ -11,7 +11,7 @@ import { DataService } from './service/data.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  data: Data;
+  data;
 
   constructor(
     protected router: Router,
