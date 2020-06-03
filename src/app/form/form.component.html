@@ -58,7 +58,7 @@
         </mat-form-field>
 
         <div class="element">
-            <span>写真（5MB以下，任意<br></span>
+            <span>写真（5MB以下，任意）<br></span>
             <span *ngIf="file_size > 5000000" class="image_error">ファイルサイズが5MBを超えています</span>
             <input hidden #file_upload type="file" accept="image/*" formControlName="image"
                 (change)="set_image_data($event)">

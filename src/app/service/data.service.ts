@@ -60,19 +60,6 @@ export class DataService {
         this.create_search_options_observable(clothes)
         this.search_options_subject.next(this.search_options);
       });
-    // .pipe(
-    //   map(data_list => {
-    //     return this.create_cloth_data_list(data_list);
-    //   }),
-    //   tap(cloth_data => this.create_search_options_observable(cloth_data)),
-    //   tap(() => this.search_options_subject.next(this.search_options)),
-    //   tap(cloth_data => {
-    //     this.cloth_data = cloth_data;
-    //     this.cloth_data_subject.next(cloth_data);
-    //   }),
-    //   // tap(() => console.trace()),
-    //   tap(() => console.count())
-    // );
   }
 
   create_cloth_data_list(data_list: DocumentChangeAction<Data>[]): Data[] {
@@ -104,29 +91,6 @@ export class DataService {
     return clothes;
   }
 
-  get_new_data_from_firebase() {
-    this.session_service.session_state.subscribe((session: Session) => {
-      if (session) {
-        this.uid = session.uid;
-        this.get_new_data(session.uid);
-      }
-    });
-  }
-
-  get_new_data(uid: string) {
-    this.store
-      .collection("users")
-      .doc(uid)
-      .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
-      .snapshotChanges()
-      .pipe(
-        tap(() => console.count())
-      )
-      .subscribe(data_list => {
-        this.cloth_data_subject.next(this.create_cloth_data_list(data_list));
-      });
-  }
-
   create_search_options_observable(cloth_data_list: Data[]) {
     this.search_options = this.create_search_options(cloth_data_list);
 
@@ -137,19 +101,58 @@ export class DataService {
     let autocomplete_list: Autocomplete[] = [];
 
     cloth_data_list.forEach(cloth_data => {
-      let char: string;
-      if (this.check_ja(cloth_data.brand[0])) {
-        char = "その他";
-      } else {
-        char = cloth_data.brand[0].toUpperCase();
-      }
-      const brand_name = cloth_data.brand;
-      const item_category = cloth_data.item_category;
+      const brands = cloth_data.brand.split(" x ");
+      const length = brands.length;
 
-      autocomplete_list = this.push_autocomplete(autocomplete_list, [char, "その他"], [brand_name, item_category], ["brands", "items"]);
+      const chars = this.create_chars(brands);
+      const categories = this.add_element(length, "brands", "items");
+      const names = this.add_element(length, brands, cloth_data.item_category);
+
+      autocomplete_list = this.push_autocomplete(autocomplete_list, chars, names, categories);
+      if (length > 1) {
+        autocomplete_list = this.push_autocomplete(autocomplete_list, [this.create_char(cloth_data.brand)], [cloth_data.brand], ["brands"]);
+      }
     });
 
     return autocomplete_list;
+  }
+
+  create_chars(brands: string[]): string[] {
+    let list = [];
+
+    for (const brand of brands) {
+      list.push(this.create_char(brand));
+    }
+
+    list.push("その他");
+    return list;
+  }
+
+  create_char(brand: string): string {
+    const char = brand[0];
+
+    if (char.match(/^[0-9]*$/)) {
+      return "0-9";
+    } else if (this.check_ja(char)) {
+      return "その他";
+    }
+
+    return char;
+  }
+
+  add_element(length: number, content: string | string[], last_content: string): string[] {
+    let list = [];
+
+    if (content instanceof Array) {
+      list = content;
+    } else {
+      for (let index = 0; index < length; index++) {
+        list.push(content);
+      }
+    }
+
+    list.push(last_content);
+    return list;
   }
 
   push_autocomplete(autocomplete_list: Autocomplete[], chars: string[], names: string[], categories: string[]): Autocomplete[] {
@@ -262,13 +265,8 @@ export class DataService {
       .set(cloth_data);
   }
 
-  // get_cloth_data(): Observable<Data[]> {
-  //   return this.clothes
-  //     .pipe(tap(data => console.log("firestore: ", data)));
-  // }
 
   get_cloth_data_subject(): Observable<Data[]> {
-    // return this.cloth_data_subject.pipe(distinctUntilChanged((pre: Data[], cur: Data[]) => { return pre !== cur }));
     return this.cloth_data_subject;
   }
 

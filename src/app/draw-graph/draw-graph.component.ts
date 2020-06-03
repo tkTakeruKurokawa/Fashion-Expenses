@@ -76,11 +76,11 @@ export class DrawGraphComponent implements OnInit, OnDestroy {
         if (data) {
           this.draw_graph.clothes = data;
           this.draw_graph.number_of_data = data.length;
-        }
 
-        this.make_ranking();
-        this.sort_ranking();
-        this.display_filter();
+          this.make_ranking();
+          this.sort_ranking();
+          this.display_filter();
+        }
       });
 
   }

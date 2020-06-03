@@ -113,17 +113,38 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
       category = "item_category";
     }
 
-
     this.subscription = this.data_service.get_cloth_data_subject().subscribe(cloth_data => {
-      this.detail = new Detail();
-      this.detail.cloth_data = cloth_data.filter(data => data[category].replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]);
+      if (cloth_data) {
+        this.detail = new Detail();
+        this.create_cloth_data(cloth_data, category);
 
-      this.data_count = this.detail.cloth_data.length;
-      this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
-      this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
+        this.data_count = this.detail.cloth_data.length;
+        // this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
+        this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
 
-      this.make_ranking();
-      this.sort_ranking();
+        this.make_ranking();
+        this.sort_ranking();
+      }
+    });
+  }
+
+  create_cloth_data(cloth_data: Data[], category: string) {
+    this.detail.cloth_data = cloth_data.filter(data => {
+      const clothes: string = data[category];
+
+      if (clothes.replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]) {
+        this.detail.title = clothes;
+        return true;
+      }
+
+      for (const cloth of clothes.split(" x ")) {
+        if (cloth.replace(/[-\/\\^$*+?.()|\[\]{}\s]+/g, "") === this.params[1]) {
+          this.detail.title = cloth;
+          return true;
+        }
+      }
+
+      return false;
     });
   }
 
