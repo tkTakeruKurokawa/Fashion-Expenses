@@ -47,12 +47,18 @@
         </div>
 
         <div *ngIf="!login" class="menus">
-            <a mat-button routerLink="sign-in" routerLinkActive="sign_in">ログイン</a>
+            <div class="login_button">
+                <a mat-button routerLink="sign-in" routerLinkActive="sign_in">ログイン</a>
+            </div>
         </div>
 
     </mat-toolbar-row>
 
     <mat-toolbar-row *ngIf="login" class="menus min_menus">
         <app-search></app-search>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row *ngIf="!login" class="menus min_menus">
+        <a mat-button routerLink="sign-in" routerLinkActive="sign_in">ログイン</a>
     </mat-toolbar-row>
 </mat-toolbar>

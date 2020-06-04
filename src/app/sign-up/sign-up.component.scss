@@ -1,14 +1,141 @@
-.sign_up {
+$height: 50vh;
+$width-mid: 768px;
+$width-sm: 480px;
+
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.elements {
   position: relative;
-  width: 50%;
-  min-width: 350px;
+  top: 0 !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  align-content: flex-start;
+  height: 100%;
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  word-wrap: break-word;
+
+  @include max-screen($width-mid) {
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .chart {
+    // height: 100%;
+    height: $height;
+    width: 50%;
+    margin: 0 auto;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.25);
+    overflow-x: scroll;
+    overflow-y: scroll;
+
+    @include max-screen($width-mid) {
+      width: 90%;
+    }
+
+    .chart_wrapper {
+      position: relative;
+      height: 100%;
+      width: 100%;
+
+      .chart_area_wrapper {
+        width: 50vw;
+        height: 100%;
+
+        @include max-screen($width-mid) {
+          width: 100%;
+        }
+
+        @include max-screen($width-sm) {
+          width: 390px;
+        }
+
+        canvas {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+  }
+
+  .image {
+    position: relative;
+    height: $height;
+    width: 50%;
+    // padding-left: 10px;
+    margin: 0 auto;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.25);
+    overflow-y: scroll;
+
+    @include max-screen($width-mid) {
+      width: 90%;
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .description {
+    display: block;
+    text-align: left;
+    width: 40%;
+    margin: 0 auto;
+
+    p {
+      text-align: center;
+    }
+
+    @include max-screen($width-mid) {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      width: 90%;
+    }
+  }
+}
+
+.sign_up {
+  width: 700px;
   margin: 0 auto;
-  top: calc(25vh - 64px);
+  margin-bottom: 20px;
   padding: 20px 0;
   background-color: white;
   border-radius: 5px;
   text-align: center;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+
+  @include max-screen($width-mid) {
+    width: 450px;
+  }
+
+  @include max-screen($width-sm) {
+    width: 280px;
+  }
 
   h1 {
     text-align: center;
@@ -27,7 +154,7 @@
     }
 
     .button {
-      width: 30%;
+      width: 40%;
       margin: 20px auto;
     }
   }

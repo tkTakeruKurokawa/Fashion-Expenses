@@ -9,10 +9,14 @@
 
             <div class="main">
                 <div class="chart">
-                    <canvas baseChart [data]="draw_graph.bar_values[first_index]"
-                        [labels]="draw_graph.bar_names[first_index]" [options]="draw_graph.bar_options"
-                        [legend]="draw_graph.bar_legend" [chartType]="draw_graph.bar_type" id="canvas">
-                    </canvas>
+                    <div class="chart_wrapper">
+                        <div class="chart_area_wrapper">
+                            <canvas baseChart [data]="draw_graph.bar_values[first_index]"
+                                [labels]="draw_graph.bar_names[first_index]" [options]="draw_graph.bar_options"
+                                [legend]="draw_graph.bar_legend" [chartType]="draw_graph.bar_type" id="canvas">
+                            </canvas>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="list">

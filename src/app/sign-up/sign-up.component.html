@@ -1,3 +1,64 @@
+<div class="elements">
+    <div class="chart">
+        <div class="chart_wrapper">
+            <div class="chart_area_wrapper">
+                <canvas baseChart [data]="bar_values" [labels]="bar_names" [options]="bar_options" [legend]="bar_legend"
+                    [chartType]="bar_type">
+                </canvas>
+            </div>
+        </div>
+    </div>
+    <div class="description">
+        <p>このWebアプリでは，ブランドやアイテム（トップス，パンツなど）に関する以下の項目を円グラフで表し視覚化します．</p>
+        <ul>
+            <li>ブランドごとの消費金額</li>
+            <li>ブランドごとの所持数</li>
+            <li>アイテムごとの消費金額</li>
+            <li>アイテムごとの所持数</li>
+        </ul>
+    </div>
+</div>
+
+<div class="elements">
+    <div class="image">
+        <img src="../../assets/cloth_detail.png">
+    </div>
+    <div class="description">
+        <p>特定のブランド，アイテムに関する詳細なデータを見ることができます．</p>
+        <ul>
+            <li>合計消費額</li>
+            <li>合計所持数</li>
+            <li>該当ブランド，アイテムだけを集めたデータ</li>
+        </ul>
+    </div>
+</div>
+
+<div class="elements">
+    <div class="image">
+        <img src="../../assets/form.png">
+    </div>
+    <div class="description">
+        <p>洋服の情報の登録はフォームを通して行います．以下の項目を登録します．
+        <ul>
+            <li>ブランド名</li>
+            <li>アイテム名</li>
+            <li>アイテムカテゴリ</li>
+            <li>価格</li>
+            <li>写真（任意）</li>
+        </ul>
+    </div>
+</div>
+
+<div class="elements">
+    <div class="image">
+        <img src="../../assets/cloth_list.png">
+    </div>
+    <div class="description">
+        <p>登録した洋服の情報を編集したり，削除したりできます．</p>
+        <p>登録した洋服の一覧が出るのでギャラリーのようにできます．</p>
+    </div>
+</div>
+
 <div class="sign_up">
     <h1>アカウント登録</h1>
 

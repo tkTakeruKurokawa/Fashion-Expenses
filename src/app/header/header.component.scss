@@ -66,6 +66,12 @@ $break-size: 495px;
   }
 
   @media screen and (max-width: 400px) {
+    .login_button {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
     .break_menus {
       display: none;
     }
