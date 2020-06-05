@@ -1,3 +1,12 @@
+$width-mid: 768px;
+$width-sm: 480px;
+
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
 .register {
   height: 100%;
   width: 100%;
@@ -45,6 +54,12 @@
           font-size: 1vw;
           white-space: initial;
           line-height: initial;
+
+          @include max-screen($width-sm) {
+            display: block;
+            padding: 3px 3px;
+            font-size: 10px;
+          }
         }
 
         .add_failed {
@@ -82,6 +97,10 @@
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: 1.4vw;
+
+        @include max-screen($width-sm) {
+          font-size: 10px;
+        }
       }
     }
 
@@ -98,14 +117,20 @@
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: space-around;
+      align-items: center;
+      align-content: space-around;
+      height: 100px;
+      margin: 0;
 
       .button_size {
-        // padding-top: 10px;
-        // padding-bottom: 10px;
         padding: 10px;
         white-space: initial;
         line-height: initial;
         font-size: 1.3vw;
+
+        @include max-screen($width-sm) {
+          font-size: 10px;
+        }
       }
     }
   }

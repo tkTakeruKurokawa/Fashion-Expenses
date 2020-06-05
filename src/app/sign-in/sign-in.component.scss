@@ -9,9 +9,13 @@ $width-sm: 480px;
 
 .sign_in {
   position: relative;
+  top: calc(50vh + 64px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-50vh);
+  height: 100%;
   width: 700px;
-  margin: 0 auto;
-  top: calc(25vh - 64px);
+  // margin: 0 auto;
+  // top: calc(25vh - 64px);
   padding: 20px 0;
   background-color: white;
   border-radius: 5px;

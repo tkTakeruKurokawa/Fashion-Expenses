@@ -188,6 +188,10 @@ $width-sm: 480px;
         width: 40%;
         padding: 10px;
         margin: 0 auto;
+
+        @include max-screen($width-sm) {
+          font-size: 10px;
+        }
       }
     }
   }
