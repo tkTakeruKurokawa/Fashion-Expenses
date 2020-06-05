@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SessionService } from '../service/session.service';
 import { Session } from '../class-interface/Session';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DataService } from "../service/data.service";
 
 @Component({

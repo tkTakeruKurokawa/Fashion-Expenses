@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
-
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
-import { switchMap, map, timeout } from 'rxjs/operators';
-
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Session } from "../class-interface/Session";
-import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +17,6 @@ export class SessionService {
   constructor(
     private router: Router,
     private auth: AngularFireAuth,
-    private store: AngularFirestore,
   ) { }
 
 

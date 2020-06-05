@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Data } from "./class-interface/data";
-import { Session } from "./class-interface/Session";
 import { SessionService } from './service/session.service';
 import { DataService } from './service/data.service';
 
@@ -21,12 +19,6 @@ export class AppComponent {
     this.data_service.get_data_from_firestore();
 
     this.session_service.check_sign_in();
-    // this.session_service.session_state.subscribe((session: Session) => {
-    //   if (session.login) {
-    //     this.data_service.get_data_from_firestore(session.uid);
-    //   }
-    // });
-
 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

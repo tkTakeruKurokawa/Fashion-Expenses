@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SessionService } from '../service/session.service';
 import { Session } from '../class-interface/Session';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -21,7 +21,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscription = this.session_service.session_state.subscribe((session: Session) => {
       if (session) {
         this.login = session.login;
-        // this.data_service.get_data_from_firestore(session.uid);
       }
     });
   }

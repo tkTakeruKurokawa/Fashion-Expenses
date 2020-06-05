@@ -63,7 +63,7 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
   category: string;
   data_count: number;
 
-  subscription: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private data_service: DataService,
@@ -77,19 +77,21 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
   get_data_type() {
     this.active_router.pathFromRoot.forEach(urls => {
 
-      urls.url
-        .pipe(filter(url => url.length > 1))
-        .subscribe(url => {
-          url.forEach((params, index) => {
-            // console.log(params);
-            if (params.path.length > 1) {
-              this.params[index] = params.path;
-            }
-          });
+      this.subscriptions.push(
+        urls.url
+          .pipe(filter(url => url.length > 1))
+          .subscribe(url => {
+            url.forEach((params, index) => {
+              // console.log(params);
+              if (params.path.length > 1) {
+                this.params[index] = params.path;
+              }
+            });
 
-          this.define_category();
-          this.get_data_list();
-        })
+            this.define_category();
+            this.get_data_list();
+          })
+      );
     });
 
 
@@ -113,7 +115,7 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
       category = "item_category";
     }
 
-    this.subscription = this.data_service.get_cloth_data_subject().subscribe(cloth_data => {
+    this.subscriptions.push(this.data_service.get_cloth_data_subject().subscribe(cloth_data => {
       if (cloth_data) {
         this.detail = new Detail();
         this.create_cloth_data(cloth_data, category);
@@ -125,7 +127,8 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
         this.make_ranking();
         this.sort_ranking();
       }
-    });
+    })
+    );
   }
 
   create_cloth_data(cloth_data: Data[], category: string) {
@@ -252,6 +255,6 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 }

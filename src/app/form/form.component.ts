@@ -9,8 +9,8 @@ import { Autocomplete } from "../class-interface/autocomplete";
 import { DataService } from '../service/data.service';
 import { Options } from "../class-interface/item-categories";
 import * as moment from "moment";
-import { Observable, Subscription, interval, Subject, BehaviorSubject } from 'rxjs';
-import { startWith, map, filter, tap, debounceTime } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 let brands_word_count: number = 0;
 
@@ -53,7 +53,6 @@ export class FormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private afs: AngularFireStorage,
     private location: Location,
-    private cd: ChangeDetectorRef
   ) { }
 
   async ngOnInit() {
@@ -70,7 +69,7 @@ export class FormComponent implements OnInit, OnDestroy {
       this.initialize_data();
     }
 
-    this.data_service.get_cloth_data_subject().subscribe()
+    this.subscriptions.push(this.data_service.get_cloth_data_subject().subscribe());
 
     this.activate_filter(0);
 

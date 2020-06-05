@@ -1,7 +1,6 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener, ViewChild, Inject } from '@angular/core';
-import { Observable, Subject, pipe, Subscription } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap, startWith, map } from "rxjs/operators";
-import { Data } from "../class-interface/data";
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Observable, Subscription } from "rxjs";
+import { startWith, map } from "rxjs/operators";
 import { DataService } from "../service/data.service";
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Autocomplete } from '../class-interface/autocomplete';
@@ -29,8 +28,6 @@ export class SearchComponent implements OnInit, OnDestroy {
           .valueChanges
           .pipe(
             startWith(''),
-            // debounceTime(500),
-            // distinctUntilChanged(),
             map(term => this.data_service.filter_options("search", term)),
           );
       });

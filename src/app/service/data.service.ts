@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, BehaviorSubject, pipe } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { Data } from "../class-interface/data";
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { map, take, switchMap, tap, startWith, distinctUntilChanged } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { SessionService } from './session.service';
 import { Session } from '../class-interface/Session';
 import { Autocomplete } from "../class-interface/autocomplete";
-import { Options } from "../class-interface/item-categories";
-import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +15,6 @@ import { resolve } from 'url';
 export class DataService {
   cloth_data: Data[] = [];
   cloth_data_subject = new BehaviorSubject<Data[]>(null);
-  // cloth_data_subject = new Subject<Data[]>();
   clothes: Observable<Data[]>;
   brand_options: Autocomplete[] = [];
   search_options: Autocomplete[] = [];
@@ -46,20 +43,22 @@ export class DataService {
   }
 
   get_cloth_data_list(uid: string) {
-    this.store
-      .collection("users")
-      .doc(uid)
-      .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
-      .snapshotChanges()
-      .pipe(
-        tap(() => console.count())
-      )
-      .subscribe(cloth_data => {
-        const clothes = this.create_cloth_data_list(cloth_data)
-        this.cloth_data_subject.next(clothes);
-        this.create_search_options_observable(clothes)
-        this.search_options_subject.next(this.search_options);
-      });
+    if (uid) {
+      this.store
+        .collection("users")
+        .doc(uid)
+        .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
+        .snapshotChanges()
+        .pipe(
+          tap(() => console.count())
+        )
+        .subscribe(cloth_data => {
+          const clothes = this.create_cloth_data_list(cloth_data)
+          this.cloth_data_subject.next(clothes);
+          this.create_search_options_observable(clothes)
+          this.search_options_subject.next(this.search_options);
+        });
+    }
   }
 
   create_cloth_data_list(data_list: DocumentChangeAction<Data>[]): Data[] {

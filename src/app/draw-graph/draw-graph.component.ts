@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, Input, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Data } from '../class-interface/data';
 import { DataService } from '../service/data.service';
-import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 class DrawGraph {
@@ -64,8 +63,6 @@ export class DrawGraphComponent implements OnInit, OnDestroy {
 
   constructor(
     private data_service: DataService,
-    private zone: NgZone,
-    private change_detector: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
