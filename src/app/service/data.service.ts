@@ -50,7 +50,7 @@ export class DataService {
         .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
         .snapshotChanges()
         .pipe(
-          tap(() => console.count())
+          // tap(() => console.count())
         )
         .subscribe(cloth_data => {
           const clothes = this.create_cloth_data_list(cloth_data)

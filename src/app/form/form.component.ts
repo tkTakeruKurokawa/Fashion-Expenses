@@ -234,7 +234,7 @@ export class FormComponent implements OnInit, OnDestroy {
       };
       this.file_reader.readAsDataURL(this.file);
     }
-    console.log(this.file, this.file_path);
+    // console.log(this.file, this.file_path);
   }
 
   remove_image_data() {
@@ -284,7 +284,7 @@ export class FormComponent implements OnInit, OnDestroy {
     if (this.file_exist) {
       const storage_ref = this.afs.ref(this.file_path);
       const result = await storage_ref.put(this.file, { 'cacheControl': 'public, max-age=86400' });
-      console.log(result);
+      // console.log(result);
     }
 
     const data = this.create_data();
@@ -304,7 +304,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
       const storage_ref = this.afs.ref(this.file_path);
       const result = await storage_ref.put(this.file, { 'cacheControl': 'public, max-age=86400' });
-      console.log(result);
+      // console.log(result);
 
     } else {
       if (!this.image_url) {
@@ -347,9 +347,7 @@ export class FormComponent implements OnInit, OnDestroy {
         if (brand.length < 1) {
           brand += name;
         } else {
-          // if (name.length > 0) {
           brand += " x " + name;
-          // }
         }
       }
     }

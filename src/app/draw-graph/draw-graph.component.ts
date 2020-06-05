@@ -30,7 +30,6 @@ class DrawGraph {
   ];
   bar_options: any = {
     responsive: true,
-    // mainAspectRate: false,
     legend: {
       position: "bottom",
     },

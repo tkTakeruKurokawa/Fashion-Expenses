@@ -82,7 +82,6 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
           .pipe(filter(url => url.length > 1))
           .subscribe(url => {
             url.forEach((params, index) => {
-              // console.log(params);
               if (params.path.length > 1) {
                 this.params[index] = params.path;
               }
@@ -93,10 +92,6 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
           })
       );
     });
-
-
-    // this.detail.active_router.paramMap.subscribe(param => console.log(param));
-    // console.log(this.detail.active_router);
   }
 
   define_category() {
@@ -121,7 +116,6 @@ export class DrawDetailGraphComponent implements OnInit, OnDestroy {
         this.create_cloth_data(cloth_data, category);
 
         this.data_count = this.detail.cloth_data.length;
-        // this.detail.title = this.detail.cloth_data.map(data => data[category])[0];
         this.detail.cloth_data.sort((a, b) => b["value"] - a["value"]);
 
         this.make_ranking();
