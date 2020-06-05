@@ -44,7 +44,6 @@ $width-sm: 480px;
   }
 
   .chart {
-    // height: 100%;
     height: $height;
     width: 50%;
     margin: 0 auto;
@@ -86,7 +85,6 @@ $width-sm: 480px;
     position: relative;
     height: $height;
     width: 50%;
-    // padding-left: 10px;
     margin: 0 auto;
     box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.25);
     overflow-y: scroll;

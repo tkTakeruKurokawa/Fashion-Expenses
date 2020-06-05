@@ -1,3 +1,23 @@
+$width-mid: 859px;
+$width-sm: 480px;
+
+@mixin max-screen($break-point) {
+  @media screen and (max-width: $break-point) {
+    @content;
+  }
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
 .body {
   width: 100%;
   margin-bottom: 20px;
@@ -9,29 +29,54 @@
   .title {
     padding: 20px 0;
   }
-  .chart {
+
+  .charts {
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
     height: 100%;
     width: 100%;
     text-align: center;
 
-    .chart-value {
+    @include max-screen($width-mid) {
+      flex-direction: column;
+    }
+
+    .chart-group {
       height: 100%;
       width: 50%;
 
-      .total-value {
+      @include max-screen($width-mid) {
+        width: 90%;
+        margin-bottom: 30px;
+        box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .total {
         color: red;
       }
-    }
-    .chart-number {
-      height: 100%;
-      width: 50%;
 
-      .total-number {
-        color: red;
+      .chart_wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        overflow-x: scroll;
+        overflow-y: scroll;
+
+        .chart_area_wrapper {
+          width: 100%;
+          height: 100%;
+
+          @include max-screen($width-mid) {
+            width: 100%;
+          }
+
+          @include max-screen($width-sm) {
+            width: 397px;
+          }
+        }
       }
     }
   }

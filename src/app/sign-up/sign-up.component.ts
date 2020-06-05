@@ -34,11 +34,6 @@ export class SignUpComponent implements OnInit {
   bar_legend = true;
   bar_type = "pie";
 
-  canvas: any;
-  ctx: any;
-  @ViewChild('chart', { read: ElementRef, static: false }) chart: ElementRef;
-
-
   constructor(
     private fb: FormBuilder,
     private session_service: SessionService,

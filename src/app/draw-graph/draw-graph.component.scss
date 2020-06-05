@@ -34,7 +34,6 @@ $width-sm: 480px;
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
-    // flex-wrap: wrap;
     justify-content: space-around;
     align-content: flex-start;
     height: 100%;
@@ -47,13 +46,11 @@ $width-sm: 480px;
 
     .chart {
       position: sticky;
-      // height: 50vh;
       top: 35%;
+      height: 100%;
       width: 55%;
       margin: 0 auto;
       margin-top: 100px;
-      overflow-x: scroll;
-      overflow-y: scroll;
 
       @include max-screen($width-mid) {
         position: relative;
@@ -65,6 +62,8 @@ $width-sm: 480px;
         position: relative;
         height: 100%;
         width: 100%;
+        overflow-x: scroll;
+        overflow-y: scroll;
 
         .chart_area_wrapper {
           width: 100%;
@@ -80,25 +79,6 @@ $width-sm: 480px;
         }
       }
     }
-
-    // .chart {
-    //   position: sticky;
-    //   height: 100%;
-    //   width: 50vw;
-    //   top: 35%;
-    //   min-width: 400px;
-    //   margin-top: 100px;
-
-    //   @include max-screen($width-mid) {
-    //     position: relative;
-    //     width: 95%;
-    //     min-width: auto;
-    //     margin: 0 auto;
-    //     margin-top: 0px;
-    //     margin-bottom: 20px;
-    //     overflow-wrap: break-word;
-    //   }
-    // }
 
     .list {
       height: 100%;

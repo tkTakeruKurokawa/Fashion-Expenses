@@ -50,8 +50,8 @@
                         </div>
                     </div>
 
-                    <mat-expansion-panel *ngIf="show_others" (opened)="panel_state = true"
-                        (closed)="panel_state = false">
+                    <mat-expansion-panel *ngIf="show_others" (opened)="draw_graph.panel_state = true"
+                        (closed)="draw_graph.panel_state = false">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{ draw_graph.panel_state ? '閉じる' : '続きを開く'  }}
