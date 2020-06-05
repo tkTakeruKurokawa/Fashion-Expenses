@@ -19,7 +19,7 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
     this.sign_in_form = this.fb.group({
       'email': ['', [Validators.required, Validators.email]],
-      'password': ['', [Validators.required, Validators.minLength(6)]]
+      'password': ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[A-Za-z0-9]*$/)]]
     });
   }
 

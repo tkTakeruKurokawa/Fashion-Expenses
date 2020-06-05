@@ -27,9 +27,7 @@
                         (click)="increase_brand()">コラボブランドを追加</button>
                     <button *ngIf="i > 0" mat-raised-button type="button" class="brand_button"
                         (click)="decrease_brand(i)">コラボブランドを削除</button>
-                    <!-- <div class="add_failed"> -->
                     <span *ngIf="i === 0" class="add_failed">{{ add_failed_message }}</span>
-                    <!-- </div> -->
                 </div>
             </div>
         </div>
@@ -70,7 +68,6 @@
                 <button mat-raised-button type="button" *ngIf="image_url" (click)="remove_image_data()"
                     (click)="file_upload.value = ''">写真を削除</button>
             </div>
-            <!-- <span *ngIf="file_exist">アップロードされる画像：{{file_name}}</span> -->
             <img *ngIf="image_url" class="image" [src]="image_url">
         </div>
 

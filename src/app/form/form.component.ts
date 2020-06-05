@@ -60,8 +60,8 @@ export class FormComponent implements OnInit, OnDestroy {
     this.data_service.set_form_writable(true);
     this.data = this.data_service.get_edit_data();
     this.register_form = this.fb.group({
-      brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required, max_brands_word_validator]],
-      item_name: [this.is_data_existing() ? this.data.item_name : null, [Validators.required, max_text_validator]],
+      brand0: [this.is_data_existing() ? this.data.brand : null, [Validators.required, max_brands_word_validator, invalid_space_validator, only_space_string_validator]],
+      item_name: [this.is_data_existing() ? this.data.item_name : null, [Validators.required, max_text_validator, invalid_space_validator, only_space_string_validator]],
       item_category: [this.is_data_existing() ? this.data.item_category : null, [Validators.required]],
       value: [this.is_data_existing() ? this.data.value : null, [Validators.required, max_value_validator]],
       image: [null],
@@ -170,6 +170,12 @@ export class FormComponent implements OnInit, OnDestroy {
   get_text_error_message(key: string): string {
     if (this.register_form.get(key).hasError("required")) {
       return this.required_error;
+    }
+    if (this.register_form.get(key).hasError("only_space_string_validator")) {
+      return "文字を入力してください"
+    }
+    if (this.register_form.get(key).hasError("invalid_space_validator")) {
+      return "先頭もしくは末尾にスペースが入っています";
     }
     if (this.register_form.get(key).hasError("max_brands_word_validator")) {
       return this.max_text_error;
@@ -413,4 +419,18 @@ function max_text_validator(form_control: AbstractControl) {
 
 function max_brands_word_validator() {
   return (brands_word_count > 100) ? { max_brands_word_validator: true } : null;
+}
+
+function invalid_space_validator(form_control: AbstractControl) {
+  if (form_control.value) {
+    return (form_control.value.match((/^\s+|\s+$/g))) ? { invalid_space_validator: true } : null;
+  }
+  return null;
+}
+
+function only_space_string_validator(form_control: AbstractControl) {
+  if (form_control.value) {
+    return (form_control.value.match(/(^\u3000+$)|(^\x20+$)/g)) ? { only_space_string_validator: true } : null;
+  }
+  return null;
 }
