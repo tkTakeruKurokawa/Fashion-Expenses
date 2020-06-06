@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 
 import { Data } from "../class-interface/data";
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { tap, distinctUntilChanged } from 'rxjs/operators';
 import { SessionService } from './session.service';
 import { Session } from '../class-interface/Session';
 import { Autocomplete } from "../class-interface/autocomplete";
@@ -15,7 +14,6 @@ import { Autocomplete } from "../class-interface/autocomplete";
 export class DataService {
   cloth_list: Data[] = [];
   cloth_data_subject = new BehaviorSubject<Data[]>(null);
-  clothes: Observable<Data[]>;
   brand_options: Autocomplete[] = [];
   search_options: Autocomplete[] = [];
   filtered_brand_options: Observable<Autocomplete[]>;
@@ -27,6 +25,8 @@ export class DataService {
 
   uid: string = "";
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private session_service: SessionService,
     private store: AngularFirestore,
@@ -34,30 +34,34 @@ export class DataService {
   ) { }
 
   get_data_from_firestore() {
-    this.session_service.session_state.subscribe((session: Session) => {
-      if (session) {
-        this.uid = session.uid;
-        this.get_cloth_data_list(session.uid);
-      }
-    });
+    this.subscriptions.push(
+      this.session_service.session_state.subscribe((session: Session) => {
+        if (session) {
+          this.uid = session.uid;
+          this.get_cloth_data_list(session.uid);
+        }
+      })
+    );
   }
 
   get_cloth_data_list(uid: string) {
     if (uid) {
-      this.store
-        .collection("users")
-        .doc(uid)
-        .collection<Data>("clothes")
-        .stateChanges()
-        .pipe(
-          // tap(() => console.count())
-        )
-        .subscribe(cloth_list => {
-          this.build_cloth_list(cloth_list);
-          this.cloth_data_subject.next(this.cloth_list);
-          this.create_search_options_observable(this.cloth_list)
-          this.search_options_subject.next(this.search_options);
-        });
+      this.subscriptions.push(
+        this.store
+          .collection("users")
+          .doc(uid)
+          .collection<Data>("clothes")
+          .stateChanges()
+          .pipe(
+            // tap(() => console.count())
+          )
+          .subscribe(cloth_list => {
+            this.build_cloth_list(cloth_list);
+            this.cloth_data_subject.next(this.cloth_list);
+            this.create_search_options_observable(this.cloth_list)
+            this.search_options_subject.next(this.search_options);
+          })
+      );
     }
   }
 
@@ -353,5 +357,18 @@ export class DataService {
       var chr = match.charCodeAt(0) + 0x60;
       return String.fromCharCode(chr);
     });
+  }
+
+  reset_all_data() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+
+    this.cloth_list = [];
+    this.cloth_data_subject = new BehaviorSubject<Data[]>(null);
+    this.brand_options = [];
+    this.search_options = [];
+    this.search_options_subject = new Subject<Autocomplete[]>();
+    this.form_writable = false;
+    this.uid = "";
+    this.subscriptions = [];
   }
 }
