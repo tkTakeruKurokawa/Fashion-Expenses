@@ -4,7 +4,7 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { Data } from "../class-interface/data";
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { tap } from 'rxjs/operators';
+import { tap, distinctUntilChanged } from 'rxjs/operators';
 import { SessionService } from './session.service';
 import { Session } from '../class-interface/Session';
 import { Autocomplete } from "../class-interface/autocomplete";
@@ -13,7 +13,7 @@ import { Autocomplete } from "../class-interface/autocomplete";
   providedIn: 'root'
 })
 export class DataService {
-  cloth_data: Data[] = [];
+  cloth_list: Data[] = [];
   cloth_data_subject = new BehaviorSubject<Data[]>(null);
   clothes: Observable<Data[]>;
   brand_options: Autocomplete[] = [];
@@ -47,47 +47,92 @@ export class DataService {
       this.store
         .collection("users")
         .doc(uid)
-        .collection<Data>("clothes", ref => ref.orderBy("brand", "asc"))
-        .snapshotChanges()
+        .collection<Data>("clothes")
+        .stateChanges()
         .pipe(
           // tap(() => console.count())
         )
-        .subscribe(cloth_data => {
-          const clothes = this.create_cloth_data_list(cloth_data)
-          this.cloth_data_subject.next(clothes);
-          this.create_search_options_observable(clothes)
+        .subscribe(cloth_list => {
+          this.build_cloth_list(cloth_list);
+          this.cloth_data_subject.next(this.cloth_list);
+          this.create_search_options_observable(this.cloth_list)
           this.search_options_subject.next(this.search_options);
         });
     }
   }
 
-  create_cloth_data_list(data_list: DocumentChangeAction<Data>[]): Data[] {
-    let clothes: Data[] = [];
-
+  build_cloth_list(data_list: DocumentChangeAction<Data>[]) {
     data_list.forEach(data => {
       const cloth_data = data.payload.doc.data();
-      let url: string | Observable<string>;
-      if (cloth_data["image"] === "../../assets/no_image.png") {
-        url = cloth_data["image"];
-      } else {
-        const storage_rf = this.storage.ref(cloth_data["image"]);
-        url = storage_rf.getDownloadURL();
-      }
+      const doc_key = data.payload.doc.id;
 
-      clothes.push(
-        {
-          brand: cloth_data.brand,
-          item_name: cloth_data.item_name,
-          item_category: cloth_data.item_category,
-          value: cloth_data.value,
-          image: cloth_data.image,
-          url: url,
-          doc_key: data.payload.doc.id
-        }
-      );
+      switch (data.type) {
+        case "added":
+          this.add_cloth_data(cloth_data, doc_key);
+          break;
+
+        case "modified":
+          this.modify_cloth_data(cloth_data, doc_key);
+          break;
+
+        case "removed":
+          this.remove_cloth_data(doc_key);
+          break;
+      }
     });
 
-    return clothes;
+    this.cloth_list.sort((a, b) => {
+      if (a.brand < b.brand) return -1;
+      if (a.brand > b.brand) return 1;
+    });
+  }
+
+  add_cloth_data(cloth_data: Data, doc_key: string) {
+    let url: string | Observable<string>;
+
+    if (cloth_data["image"] === "../../assets/no_image.png") {
+      url = cloth_data["image"];
+    } else {
+      const storage_rf = this.storage.ref(cloth_data["image"]);
+      url = storage_rf.getDownloadURL();
+    }
+
+    this.cloth_list.push(this.create_cloth_data(cloth_data, url, doc_key));
+  }
+
+  modify_cloth_data(cur_data: Data, doc_key: string) {
+    const index = this.cloth_list.findIndex(cloth => cloth.doc_key === doc_key);
+    let pre_data = this.cloth_list[index];
+
+    let url: string | Observable<string>;
+    if (pre_data.image !== cur_data.image) {
+      if (cur_data["image"] === "../../assets/no_image.png") {
+        url = cur_data["image"];
+      } else {
+        const storage_rf = this.storage.ref(cur_data["image"]);
+        url = storage_rf.getDownloadURL();
+      }
+    } else {
+      url = cur_data["image"];
+    }
+
+    this.cloth_list[index] = this.create_cloth_data(cur_data, url, doc_key);
+  }
+
+  remove_cloth_data(doc_key: string) {
+    this.cloth_list = this.cloth_list.filter(cloth => cloth.doc_key !== doc_key);
+  }
+
+  create_cloth_data(cloth_data: Data, url: string | Observable<string>, doc_key: string): Data {
+    return {
+      brand: cloth_data.brand,
+      item_name: cloth_data.item_name,
+      item_category: cloth_data.item_category,
+      value: cloth_data.value,
+      image: cloth_data.image,
+      url: url,
+      doc_key: doc_key
+    }
   }
 
   create_search_options_observable(cloth_data_list: Data[]) {
